@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    padding: 0;
+    margin: 0;
+    /* line-height: normal; */
+}
+
+.body {
+    width: 100vw;
+    min-height: 100vh;
+    overflow: "hidden";
+    scroll-behavior: smooth;
+}
+
+.full-h-w {
+    width: 100vw;
+    min-height: 100vh;
+}
+
 @layer base {
     .bg_primary {
         @apply bg-primary-bg;
@@ -21,24 +39,16 @@
     }
 
     /* buttonsss */
-    .btn_primary_1 {
-        @apply text-text-color bg-primary hover: bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+    .btn_1 {
+        @apply text-text-color bg-primary hover:bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
     }
 
-    .btn_primary_2 {
-        @apply text-text-color bg-transparent hover: border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+    .btn_1_2 {
+        @apply text-text-color bg-transparent hover:border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
     }
 
-    .btn_sidebar {
-        @apply text-text-color bg-transparent hover: bg-primary-hover rounded-md text-base px-6 py-2 text-center inline-flex items-center gap-2 transition-colors w-full;
-    }
-
-    .btn_sidebar_active {
-        @apply text-text-color bg-primary-hover rounded-md text-base px-6 py-2 text-center inline-flex items-center gap-2 transition-colors w-full;
-    }
-
-    .btn_secondary_1 {
-        @apply text-text-color bg-secondary hover: bg-secondary-hover border-secondary border-2 rounded-xl text-xl px-8 py-3 text-center inline-flex items-center gap-2;
+    .btn_2 {
+        @apply text-text-color bg-secondary hover:bg-secondary-hover border-secondary border-2 rounded-xl text-xl px-8 py-3 text-center inline-flex items-center gap-2;
     }
 
     /* text gradient color ========= */
@@ -68,7 +78,7 @@
     }
 
     .input_1 {
-        @apply bg-primary-bg border border-primary text-text-color rounded-lg block w-full text-sm px-3 py-2.5 gap-1 md: text-base md:px-4 md:py-3 md:gap-1.5 xl:text-xl xl:px-6 xl:py-3 xl:gap-2;
+        @apply bg-primary-bg border border-primary text-text-color rounded-lg block w-full text-sm px-3 py-2.5 gap-1 md:text-base md:px-4 md:py-3 md:gap-1.5 xl:text-xl xl:px-6 xl:py-3 xl:gap-2;
     }
 
     /* gradient colors */

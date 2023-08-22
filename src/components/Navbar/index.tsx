@@ -2,24 +2,27 @@
 import React from 'react';
 
 import { useSession, signIn, signOut } from "next-auth/react"
+import Button from '@/components/Buttons/Button';
 
 
 function Navbar() {
     const { data: session } = useSession()
 
-    if (session) {
-        return (
-            <>
-                Signed in as {session?.user?.email} <br />
-                <button onClick={() => signOut()}>Sign out</button>
-            </>
-        )
-    }
     return (
-        <>
-            Not signed in <br />
-            <button onClick={() => signIn("google")}>Sign in</button>
-        </>
+        <nav>
+            {session ?
+                <>
+                    {session?.user?.email}
+                    <Button text='Sign Out'
+                        onClick={() => signOut()}
+                    />
+                </>
+                :
+                <Button text='Sign In'
+                    onClick={() => signIn("google")}
+                />
+            }
+        </nav>
     )
 }
 
