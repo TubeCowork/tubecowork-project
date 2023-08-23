@@ -1,16 +1,16 @@
 // src/models/Video.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose"
 
-export interface IVideo extends Document {
-    videoYoutubeId: string;
-    title: string;
-    description: string;
-    isUploaded: boolean;
-    isApproved: boolean;
-    video: string;
-    thumbnail: string;
-    tags: string;
-    uploadedBy: mongoose.Types.ObjectId;
+interface IVideo extends Document {
+    videoYoutubeId: string
+    title: string
+    description: string
+    isUploaded: boolean
+    isApproved: boolean
+    video: string
+    thumbnail: string
+    tags: string
+    uploadedBy: mongoose.Types.ObjectId
 }
 
 const videoSchema = new Schema<IVideo>({
@@ -27,7 +27,7 @@ const videoSchema = new Schema<IVideo>({
     description: {
         type: String,
         trim: true,
-        default: ""
+        default: "",
     },
     isUploaded: {
         type: Boolean,
@@ -50,11 +50,13 @@ const videoSchema = new Schema<IVideo>({
     },
     uploadedBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         required: true,
     },
-});
+})
 
-const VideoModel = mongoose.models.YoutubeVideo || mongoose.model<IVideo>('YoutubeVideo', videoSchema);
+const VideoModel =
+    mongoose.models?.YoutubeVideo ||
+    mongoose.model<IVideo>("YoutubeVideo", videoSchema)
 
-export default VideoModel;
+export default VideoModel

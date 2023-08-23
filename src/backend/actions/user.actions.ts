@@ -1,14 +1,17 @@
-"use server";
+"use server"
 
-import { connectToDB } from "../db";
-import UserModel from "../models/User.model";
+import { UserDetailsType } from "@/utils/types/user"
+import { connectToDB } from "../db"
+import UserModel, { IUser } from "../models/User.model"
 
-const fetchUser = async (userEmail: string) => {
+export const fetchUserDetails = async (
+    userEmail: string
+): Promise<UserDetailsType> => {
     try {
-        await connectToDB();
-
-        return await UserModel.findOne({ email: userEmail });
+        await connectToDB()
+        const user = await UserModel.findOne({ email: userEmail })
+        return user
     } catch (error: any) {
-        throw new Error(`Failed to fetch user: ${error.message}`);
+        throw new Error(`Failed to fetch user: ${error.message}`)
     }
 }

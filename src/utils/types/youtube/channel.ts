@@ -1,9 +1,9 @@
 export type YoutubeChannelType = {
-    channelName: string;
+    name: string
 }
 
 export type YoutubeChannelVerifedDataType = {
-    access_token: string;
-    refresh_token: string;
-    expiry_date: number;
+    access_token: string
+    refresh_token: string
+    expiry_date: number
 }

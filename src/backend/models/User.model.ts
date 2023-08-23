@@ -1,13 +1,14 @@
 // src/models/User.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose"
 
-export interface IUser extends Document {
-    name: string;
-    email: string;
-    image: string;
-    username: string;
-    ownedChannels: mongoose.Types.ObjectId[];
-    managedChannels: mongoose.Types.ObjectId[];
+interface IUser extends Document {
+    name: string
+    email: string
+    image: string
+    username: string
+    ownedChannels: mongoose.Types.ObjectId[]
+    managedChannels: mongoose.Types.ObjectId[]
+    created_at: Date
 }
 
 const userSchema = new Schema<IUser>({
@@ -30,16 +31,18 @@ const userSchema = new Schema<IUser>({
     },
     username: {
         type: String,
-        unique: true,
         trim: true,
         lowercase: true,
     },
-    ownedChannels: [{ type: Schema.Types.ObjectId, ref: 'YoutubeChannel' }],
-    managedChannels: [{ type: Schema.Types.ObjectId, ref: 'YoutubeChannel' }],
-});
+    created_at: {
+        type: Date,
+        default: Date.now,
+    },
+    ownedChannels: [{ type: Schema.Types.ObjectId, ref: "YoutubeChannel" }],
+    managedChannels: [{ type: Schema.Types.ObjectId, ref: "YoutubeChannel" }],
+})
 
-const UserModel = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+const UserModel =
+    mongoose.models?.User || mongoose.model<IUser>("User", userSchema)
 
-
-
-export default UserModel;
+export default UserModel

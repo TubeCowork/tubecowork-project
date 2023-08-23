@@ -1,32 +1,34 @@
-import { connectToDB } from "@/backend/db";
-import UserModel from "@/backend/models/User.model";
+import { connectToDB } from "@/backend/db"
+import UserModel from "@/backend/models/User.model"
 import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider from "next-auth/providers/google"
 
 export const handler = NextAuth({
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
         }),
     ],
     callbacks: {
         async signIn({ user, account }) {
             try {
                 if (account?.provider === "google") {
-                    await connectToDB();
-                    const _existingUser = await UserModel.findOne({ email: user.email });
+                    await connectToDB()
+                    const _existingUser = await UserModel.findOne({
+                        email: user.email,
+                    })
                     if (!_existingUser) {
                         await UserModel.create({
                             name: user.name,
                             email: user.email,
-                            image: user.image
+                            image: user.image,
                         })
                     }
                     return true
                 }
             } catch (error) {
-                console.log("signIn", error);
+                console.log("signIn", error)
             }
             return false
         },
@@ -36,7 +38,7 @@ export const handler = NextAuth({
             //     session.user.username = sessionUser?.username?.toString();
             return session
         },
-    }
+    },
 })
 
 export { handler as GET, handler as POST }
