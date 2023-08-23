@@ -1,11 +1,12 @@
 // src/models/Video.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IVideo extends Document {
+export interface IVideo extends Document {
     videoYoutubeId: string;
     title: string;
     description: string;
     isUploaded: boolean;
+    isApproved: boolean;
     video: string;
     thumbnail: string;
     tags: string;
@@ -29,6 +30,10 @@ const videoSchema = new Schema<IVideo>({
         default: ""
     },
     isUploaded: {
+        type: Boolean,
+        default: false,
+    },
+    isApproved: {
         type: Boolean,
         default: false,
     },
