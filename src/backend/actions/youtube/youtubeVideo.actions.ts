@@ -1,15 +1,18 @@
 import UserModel from "@/backend/models/User.model"
 import YoutubeChannelModel from "@/backend/models/YoutubeChannel.model"
-import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
+import {
+    YoutubeVideoBasicType,
+    YoutubeVideoUploadDataType,
+} from "@/utils/types/youtube/video"
 import { ObjectId } from "mongoose"
 import { makeVideoPublic, uploadVideoUnlisted } from "./youtubeHelper"
-import VideoModel, { IVideo } from "@/backend/models/YoutubeVideo.model"
+import VideoModel from "@/backend/models/YoutubeVideo.model"
 
 export const createYoutubeChannel = async (
     videoDetails: YoutubeVideoUploadDataType,
     channelId: ObjectId,
     userid: ObjectId
-): Promise<IVideo> => {
+): Promise<YoutubeVideoBasicType> => {
     try {
         const { title, description, tags, videoFile, thumbnailFile } =
             videoDetails

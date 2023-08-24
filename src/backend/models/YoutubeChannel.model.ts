@@ -1,7 +1,7 @@
 // src/models/YoutubeChannel.ts
 import mongoose, { Schema, Document } from "mongoose"
 
-interface IYoutubeChannel extends Document {
+export interface IYoutubeChannel extends Document {
     name: string
     isVerified: boolean
     access_token: string

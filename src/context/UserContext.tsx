@@ -2,6 +2,7 @@
 
 import { fetchUserDetails } from "@/backend/actions/user.actions"
 import { UserDetailsType } from "@/utils/types/user"
+import { YoutubeChannelBasicType } from "@/utils/types/youtube/channel"
 import { useSession } from "next-auth/react"
 import React, {
     createContext,
@@ -30,13 +31,14 @@ export const useUserData = () => {
 }
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserDetailsType>()
+    const [user, setUser] = useState<UserDetailsType>();
+    const [ownedChannels, setOwnedChannels] = useState<YoutubeChannelBasicType[]>()
     const [loading, setLoading] = useState(true)
     const { data: session } = useSession()
 
     useEffect(() => {
         const loadUser = async () => {
-            const user: UserDetailsType = await fetchUserDetails(
+            const user = await fetchUserDetails(
                 session?.user?.email as string
             )
             setUser(user)

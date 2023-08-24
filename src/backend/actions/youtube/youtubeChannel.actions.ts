@@ -1,36 +1,35 @@
+"use server"
 import { connectToDB } from "@/backend/db"
 import UserModel from "@/backend/models/User.model"
-import YoutubeChannelModel, {
-    IYoutubeChannel,
-} from "@/backend/models/YoutubeChannel.model"
+import YoutubeChannelModel from "@/backend/models/YoutubeChannel.model"
 import { UserBasicDetailsType } from "@/utils/types/user"
 import {
-    YoutubeChannelType,
+    YoutubeChannelBasicType,
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
-import { ObjectId } from "mongoose"
+import mongoose from "mongoose"
+import { getYoutubeAuthUrl } from "./youtubeHelper"
 
 export const createYoutubeChannel = async (
-    userEmail: string,
-    channel: YoutubeChannelType
-): Promise<IYoutubeChannel> => {
+    userid: string,
+    channelName: string
+): Promise<YoutubeChannelBasicType> => {
     try {
-        await connectToDB()
-        const user = await UserModel.findOne({ email: userEmail })
+        await connectToDB();
+        const user = await UserModel.findOne(new mongoose.Types.ObjectId(userid));
         if (!user) {
             throw Error("User not found")
         }
 
-        console.log("user", user)
-
         const newChannel = new YoutubeChannelModel({
-            name: channel.name,
+            name: channelName,
             owner: user._id, // Associate the channel with the user
         })
 
         const savedChannel = await newChannel.save()
         user.ownedChannels.push(savedChannel._id)
         await user.save()
+
         return savedChannel
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
@@ -38,10 +37,20 @@ export const createYoutubeChannel = async (
     }
 }
 
+export const getAuthUrl = async (): Promise<string> => {
+    try {
+        const authUrl = await getYoutubeAuthUrl();
+        return authUrl
+    } catch (error) {
+        console.error("Error creating YouTube channel:", error)
+        throw error
+    }
+}
+
 export const setChannelAsVerified = async (
-    channelId: ObjectId,
-    channel: YoutubeChannelVerifedDataType
-): Promise<IYoutubeChannel> => {
+    channelId: string,
+    verificationData: YoutubeChannelVerifedDataType
+): Promise<YoutubeChannelBasicType> => {
     try {
         await connectToDB()
 
@@ -50,9 +59,9 @@ export const setChannelAsVerified = async (
             throw Error("Channel not found")
         }
         channel.isVerified = true
-        channel.access_token = channel.access_token
-        channel.refresh_token = channel.refresh_token
-        channel.expiry = channel.expiry_date
+        channel.access_token = verificationData.access_token
+        channel.refresh_token = verificationData.refresh_token
+        channel.expiry = verificationData.expiry_date
         await channel.save()
         return channel
     } catch (error) {
@@ -62,8 +71,8 @@ export const setChannelAsVerified = async (
 }
 
 export const addEditorToChannel = async (
-    channelId: ObjectId,
-    editorId: ObjectId
+    channelId: string,
+    editorId: string
 ): Promise<UserBasicDetailsType> => {
     try {
         await connectToDB()

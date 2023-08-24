@@ -1,15 +1,21 @@
 import { google, youtube_v3 } from "googleapis"
 import { ObjectId } from "mongoose"
-import YoutubeChannelModel, {
-    IYoutubeChannel,
-} from "../../models/YoutubeChannel.model"
+import YoutubeChannelModel, { IYoutubeChannel } from "../../models/YoutubeChannel.model"
 import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
+import { YoutubeChannelBasicType, YoutubeChannelType } from "@/utils/types/youtube/channel"
 
-const redirectUri = ""
+const scopes = [
+    'https://www.googleapis.com/auth/youtube.upload',
+    'https://www.googleapis.com/auth/youtube.readonly',
+    'https://www.googleapis.com/auth/youtube.force-ssl'
+];
+const scopes_string = 'https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly'
+
+const redirectUri = "http://localhost:3000/dashboard/verifychannel";
 const auth = new google.auth.OAuth2({
     clientId: process.env.GOOGLE_CLIENT_ID || "",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    redirectUri: "YOUR_REDIRECT_URI",
+    redirectUri: redirectUri,
 })
 
 const isTokenExpired = (expiryTimestamp: number) => {
@@ -19,7 +25,9 @@ const isTokenExpired = (expiryTimestamp: number) => {
     return expiryTimestamp - fifteenMinutes < currentTimestamp
 }
 
-const authticateYoutubeWithChannel = async (channel: IYoutubeChannel) => {
+const authticateYoutubeWithChannel = async (
+    channel: IYoutubeChannel
+) => {
     try {
         auth.setCredentials({
             access_token: channel.access_token,
@@ -32,7 +40,7 @@ const authticateYoutubeWithChannel = async (channel: IYoutubeChannel) => {
             if (!credentials) throw Error("Not able to get new access token")
             auth.credentials.access_token = credentials.access_token
 
-            await YoutubeChannelModel.findByIdAndUpdate(channel._id, {
+            await YoutubeChannelModel.findByIdAndUpdate(channel.id, {
                 access_token: credentials.access_token,
                 refresh_token: credentials.refresh_token,
                 expiry: credentials.expiry_date,
@@ -49,6 +57,15 @@ const authticateYoutubeWithChannel = async (channel: IYoutubeChannel) => {
     }
 }
 
+export const getYoutubeAuthUrl = async () => {
+    const url = auth.generateAuthUrl({
+        access_type: 'offline',
+        scope: scopes
+    });
+
+    return url;
+
+}
 export const uploadVideoUnlisted = async (
     videoDetails: YoutubeVideoUploadDataType,
     channel: IYoutubeChannel

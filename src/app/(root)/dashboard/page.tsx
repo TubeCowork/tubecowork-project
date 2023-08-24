@@ -10,8 +10,6 @@ import React from "react"
 function dashboard() {
     const { loading, user } = useUserData()
 
-    console.log(user)
-
     if (loading) {
         return <h1>Loading</h1>
     }
@@ -20,10 +18,11 @@ function dashboard() {
         const channelName = prompt("channel Name")
         if (channelName && user?.email) {
             try {
-                const createdChannel = await createYoutubeChannel(user?.email, {
-                    name: channelName,
-                })
-                console.log(createdChannel)
+                const createdChannel = await createYoutubeChannel(
+                    user?.id,
+                    channelName
+                )
+                console.log("createdChannel", createdChannel)
             } catch (error) {
                 console.log("createChannel", error)
             }
@@ -39,12 +38,14 @@ function dashboard() {
                     Channels which user own
                 </h3>
                 <Button text="Link Channel" onClick={createChannel} />
-                {user?.ownedChannels.length ? (
-                    user?.ownedChannels?.map(
-                        (channel: ChannelCardData, key) => (
-                            <ChannelCard key={key} channelData={channel} />
-                        )
-                    )
+
+                {user?.ownedChannels?.length ? (
+                    <div className="flex gap-4 flex-wrap mt-4">
+                        {user?.ownedChannels?.map((channel, key) => {
+                            return <ChannelCard key={key} channelData={channel} />
+
+                        })}
+                    </div>
                 ) : (
                     <p>No owned youtube channels</p>
                 )}
@@ -54,9 +55,9 @@ function dashboard() {
                 <h3 className="text_sub_heading_size">
                     Channels which user Manage
                 </h3>
-                {user?.managedChannels.length ? (
+                {user?.managedChannels?.length ? (
                     user?.managedChannels?.map(
-                        (channel: ChannelCardData, key) => (
+                        (channel, key) => (
                             <ChannelCard key={key} channelData={channel} />
                         )
                     )

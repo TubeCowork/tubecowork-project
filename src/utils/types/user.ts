@@ -1,16 +1,14 @@
-import { IUser } from "@/backend/models/User.model"
-import { IYoutubeChannel } from "@/backend/models/YoutubeChannel.model"
-import { ObjectId } from "mongoose"
+import { YoutubeChannelBasicType } from "./youtube/channel"
 
 export type UserBasicDetailsType = {
-    id: ObjectId
+    id: string
     name: string
     email: string
     username?: string
     image?: string
 }
 
-export type UserDetailsType = IUser & {
-    ownedChannels: IYoutubeChannel[]
-    managedChannels: IYoutubeChannel[]
+export type UserDetailsType = UserBasicDetailsType & {
+    ownedChannels: YoutubeChannelBasicType[]
+    managedChannels: YoutubeChannelBasicType[]
 }
