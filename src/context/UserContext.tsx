@@ -31,16 +31,15 @@ export const useUserData = () => {
 }
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserDetailsType>();
-    const [ownedChannels, setOwnedChannels] = useState<YoutubeChannelBasicType[]>()
+    const [user, setUser] = useState<UserDetailsType>()
+    const [ownedChannels, setOwnedChannels] =
+        useState<YoutubeChannelBasicType[]>()
     const [loading, setLoading] = useState(true)
     const { data: session } = useSession()
 
     useEffect(() => {
         const loadUser = async () => {
-            const user = await fetchUserDetails(
-                session?.user?.email as string
-            )
+            const user = await fetchUserDetails(session?.user?.email as string)
             setUser(user)
             setLoading(false)
         }

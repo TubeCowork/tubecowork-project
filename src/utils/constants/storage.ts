@@ -1,1 +1,1 @@
-export const channelIdForVerify = "channel-id-for-verify";
+export const channelIdForVerify = "channel-id-for-verify"

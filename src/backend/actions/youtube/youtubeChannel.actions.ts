@@ -15,8 +15,10 @@ export const createYoutubeChannel = async (
     channelName: string
 ): Promise<YoutubeChannelBasicType> => {
     try {
-        await connectToDB();
-        const user = await UserModel.findOne(new mongoose.Types.ObjectId(userid));
+        await connectToDB()
+        const user = await UserModel.findOne(
+            new mongoose.Types.ObjectId(userid)
+        )
         if (!user) {
             throw Error("User not found")
         }
@@ -39,7 +41,7 @@ export const createYoutubeChannel = async (
 
 export const getAuthUrl = async (): Promise<string> => {
     try {
-        const authUrl = await getYoutubeAuthUrl();
+        const authUrl = await getYoutubeAuthUrl()
         return authUrl
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
@@ -53,17 +55,17 @@ export const setChannelAsVerified = async (
 ): Promise<YoutubeChannelBasicType> => {
     try {
         await connectToDB()
-
-        const channel = await YoutubeChannelModel.findById(channelId)
+        const channel = await YoutubeChannelModel.findById(
+            new mongoose.Types.ObjectId(channelId)
+        )
         if (!channel) {
             throw Error("Channel not found")
         }
-
-        const verificationData = await verifyYoutubeChannel(verifyCode);
+        const verificationData = await verifyYoutubeChannel(verifyCode)
         channel.isVerified = true
-        channel.access_token = verificationData.access_token;
-        channel.refresh_token = verificationData.refresh_token;
-        channel.expiry = verificationData.expiry_date;
+        channel.access_token = verificationData.access_token
+        channel.refresh_token = verificationData.refresh_token
+        channel.expiry = verificationData.expiry_date
         await channel.save()
         return channel
     } catch (error) {

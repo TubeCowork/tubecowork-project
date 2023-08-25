@@ -42,8 +42,9 @@ function dashboard() {
                 {user?.ownedChannels?.length ? (
                     <div className="flex gap-4 flex-wrap mt-4">
                         {user?.ownedChannels?.map((channel, key) => {
-                            return <ChannelCard key={key} channelData={channel} />
-
+                            return (
+                                <ChannelCard key={key} channelData={channel} />
+                            )
                         })}
                     </div>
                 ) : (
@@ -56,11 +57,9 @@ function dashboard() {
                     Channels which user Manage
                 </h3>
                 {user?.managedChannels?.length ? (
-                    user?.managedChannels?.map(
-                        (channel, key) => (
-                            <ChannelCard key={key} channelData={channel} />
-                        )
-                    )
+                    user?.managedChannels?.map((channel, key) => (
+                        <ChannelCard key={key} channelData={channel} />
+                    ))
                 ) : (
                     <p>No managedChannels youtube channels</p>
                 )}
