@@ -1,7 +1,7 @@
 // src/models/Video.ts
 import mongoose, { Schema, Document } from "mongoose"
 
-interface IVideo extends Document {
+export interface IVideo extends Document {
     videoYoutubeId: string
     title: string
     description: string

@@ -7,10 +7,10 @@ export type YoutubeChannelBasicType = {
     isVerified: boolean
 }
 
-export type YoutubeChannelType = {
+export type YoutubeChannelType = YoutubeChannelBasicType & {
     owner: string
-    editors: UserBasicDetailsType[]
-    videos: YoutubeVideoBasicType[]
+    editors?: UserBasicDetailsType[]
+    videos?: YoutubeVideoBasicType[]
 }
 
 export type YoutubeChannelVerifedDataType = {

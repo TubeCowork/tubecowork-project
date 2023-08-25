@@ -5,10 +5,8 @@ import { FaCheck, FaCopy } from "react-icons/fa"
 interface InputProps {
     className?: string
     type?: string
-    value?: any
     id?: string
     placeholder?: string
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     copy?: boolean
     [index: string]: any
 }
@@ -16,7 +14,6 @@ interface InputProps {
 function NormalInput({
     type,
     className,
-    value,
     id,
     placeholder,
     onChange,
@@ -42,10 +39,6 @@ function NormalInput({
                 id={id}
                 placeholder={placeholder}
                 className={`input_1 ${className}`}
-                value={value}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onChange(e)
-                }
                 {...extra}
             />
             {copy && (

@@ -9,6 +9,7 @@ import {
 } from "@/utils/types/youtube/channel"
 import mongoose from "mongoose"
 import { getYoutubeAuthUrl, verifyYoutubeChannel } from "./youtubeHelper"
+import { getObjectId } from "../user.actions"
 
 export const createYoutubeChannel = async (
     userid: string,
@@ -76,16 +77,16 @@ export const setChannelAsVerified = async (
 
 export const addEditorToChannel = async (
     channelId: string,
-    editorId: string
+    editorEmail: string
 ): Promise<UserBasicDetailsType> => {
     try {
         await connectToDB()
-
-        const channel = await YoutubeChannelModel.findById(channelId)
+        const _channelObjectId = await getObjectId(channelId);
+        const channel = await YoutubeChannelModel.findById(_channelObjectId);
         if (!channel) {
             throw Error("YouTube channel not found")
         }
-        const editor = await UserModel.findById(editorId)
+        const editor = await UserModel.findOne({ email: editorEmail })
         if (!editor) {
             throw Error("Editor user not found")
         }
@@ -98,7 +99,11 @@ export const addEditorToChannel = async (
             editor.managedChannels.push(channel._id)
             await editor.save()
         }
-        return editor
+        return {
+            id: String(editor._id),
+            name: String(editor.name),
+            email: String(editor.email)
+        }
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
         throw error
