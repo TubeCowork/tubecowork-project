@@ -8,7 +8,7 @@ import {
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
 import mongoose from "mongoose"
-import { getYoutubeAuthUrl } from "./youtubeHelper"
+import { getYoutubeAuthUrl, verifyYoutubeChannel } from "./youtubeHelper"
 
 export const createYoutubeChannel = async (
     userid: string,
@@ -49,7 +49,7 @@ export const getAuthUrl = async (): Promise<string> => {
 
 export const setChannelAsVerified = async (
     channelId: string,
-    verificationData: YoutubeChannelVerifedDataType
+    verifyCode: string
 ): Promise<YoutubeChannelBasicType> => {
     try {
         await connectToDB()
@@ -58,10 +58,12 @@ export const setChannelAsVerified = async (
         if (!channel) {
             throw Error("Channel not found")
         }
+
+        const verificationData = await verifyYoutubeChannel(verifyCode);
         channel.isVerified = true
-        channel.access_token = verificationData.access_token
-        channel.refresh_token = verificationData.refresh_token
-        channel.expiry = verificationData.expiry_date
+        channel.access_token = verificationData.access_token;
+        channel.refresh_token = verificationData.refresh_token;
+        channel.expiry = verificationData.expiry_date;
         await channel.save()
         return channel
     } catch (error) {

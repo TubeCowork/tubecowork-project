@@ -2,7 +2,8 @@ import { google, youtube_v3 } from "googleapis"
 import { ObjectId } from "mongoose"
 import YoutubeChannelModel, { IYoutubeChannel } from "../../models/YoutubeChannel.model"
 import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
-import { YoutubeChannelBasicType, YoutubeChannelType } from "@/utils/types/youtube/channel"
+import { YoutubeChannelBasicType, YoutubeChannelType, YoutubeChannelVerifedDataType } from "@/utils/types/youtube/channel"
+import { withTryCatch } from "@/utils/helper/trycatch"
 
 const scopes = [
     'https://www.googleapis.com/auth/youtube.upload',
@@ -57,15 +58,21 @@ const authticateYoutubeWithChannel = async (
     }
 }
 
-export const getYoutubeAuthUrl = async () => {
+export const getYoutubeAuthUrl = withTryCatch(async () => {
     const url = auth.generateAuthUrl({
         access_type: 'offline',
         scope: scopes
     });
-
     return url;
+})
 
-}
+export const verifyYoutubeChannel = withTryCatch(async (code: string): Promise<YoutubeChannelVerifedDataType> => {
+    const { tokens } = await auth.getToken(code);
+    console.log("tokens", tokens);
+    auth.setCredentials(tokens);
+    return tokens as YoutubeChannelVerifedDataType;
+})
+
 export const uploadVideoUnlisted = async (
     videoDetails: YoutubeVideoUploadDataType,
     channel: IYoutubeChannel

@@ -1,6 +1,7 @@
 'use client'
 
 import { setChannelAsVerified } from '@/backend/actions/youtube/youtubeChannel.actions';
+import { channelIdForVerify } from '@/utils/constants/storage';
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react';
 
@@ -10,19 +11,32 @@ export default function page() {
 
     const code = searchParams.get('code');
 
+    if (!code) {
+        return <div>
+            <h1>Not verifyed. Try Again.</h1>
+        </div>
+    }
 
-    useEffect(() => {
 
-        if (code) {
-            // const isVeried = await setChannelAsVerified(code);
+    const verifyCode = async () => {
+        try {
+            console.log(code);
+
+            console.log(localStorage.getItem(channelIdForVerify));
+
+
+            // const isVeried = await setChannelAsVerified("", code);
+        } catch (error) {
         }
 
-    }, [code])
+    }
+
+    verifyCode();
 
 
     return (
         <div>
-            <h1>Verfiy Yt channel</h1>
+            <h1>Verifying yourCode</h1>
             {code}
         </div>
     )
