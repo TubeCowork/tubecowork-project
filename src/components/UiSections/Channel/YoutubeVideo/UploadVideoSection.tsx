@@ -4,38 +4,69 @@ import Button from "@/components/Buttons/Button"
 import FileInput from "@/components/Inputs/FileInput"
 import Input from "@/components/Inputs/Input"
 import TextareaInput from "@/components/Inputs/TextareaInput"
+import SimpleLoader from "@/components/Loader/loader"
 import PopUpModal from "@/components/Modal/PopUpModal"
+import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
 import React, { useState } from "react"
+import VideoUploadForm from "./VideoUploadForm"
 
-type VideoUploadFormData = {
-    title: string | null;
-    description: string | null;
-    video: File | null;
-    thumbnail: File | null;
-    tags: string | null;
+type YoutubeVideoUploadFormType = {
+    title: string | null
+    description: string | null
+    tags: string | null
+    videoFile: File | null
+    thumbnailFile: File | null
 }
 
-function UploadVideoSection() {
-    const [isUploadVideoPopupOpen, setIsUploadVideoPopupOpen] = useState(false);
+type uploadVideoSectionType = {
+    uploadVideoFn: (videoData: YoutubeVideoUploadDataType) => Promise<string>
+}
 
-    const [videoFormDetails, setVideoFormDetails] = useState<VideoUploadFormData>({
-        title: null,
-        description: null,
-        video: null,
-        thumbnail: null,
-        tags: null
-    });
+function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
+    const [isUploadVideoPopupOpen, setIsUploadVideoPopupOpen] = useState(false)
+
+    const [videoFormDetails, setVideoFormDetails] =
+        useState<YoutubeVideoUploadFormType>({
+            title: null,
+            description: null,
+            tags: null,
+            videoFile: null,
+            thumbnailFile: null,
+        })
+    const [uploadingVideo, setUploadingVideo] = useState(false)
+    const [uploadedVideoId, setUploadedVideoId] = useState("")
 
     const handleOnChange = (
         id: string,
         data: File | string | number | null
     ) => {
-        setVideoFormDetails((prev)=>({...prev,[id]:data}))
+        if (id && data) {
+            setVideoFormDetails((prev) => ({ ...prev, [id]: data }))
+        }
     }
 
     const submitVideo = async () => {
-        console.log(videoFormDetails);
-        
+        // console.log(videoFormDetails);
+        try {
+            if (
+                !videoFormDetails.title ||
+                !videoFormDetails.description ||
+                !videoFormDetails.thumbnailFile ||
+                !videoFormDetails.videoFile
+            ) {
+                throw Error("All fileds are not added properly")
+            }
+            setUploadingVideo(true)
+            const id = await uploadVideoFn({
+                ...videoFormDetails,
+                tags: videoFormDetails.tags || "",
+            } as YoutubeVideoUploadDataType)
+            setUploadedVideoId(id)
+            // setIsUploadVideoPopupOpen(false);
+        } catch (error) {
+            console.log(error)
+        }
+        setUploadingVideo(false)
     }
 
     return (
@@ -54,54 +85,24 @@ function UploadVideoSection() {
                 }}
             >
                 <div className="px-24">
-                    <h1>Upload Video</h1>
-                    <FileInput
-                        label="Upload Video File"
-                        required={true}
-                        instructions="File types supported: WEBM, MP4. Max size: 1024 MB = 1GB"
-                        onChange={handleOnChange}
-                        id="video"
-                        accept=".webm, .mp4"
-                        isVideo={true}
-                        maxSize={1024}
+                    {uploadingVideo ? (
+                        <>
+                            <SimpleLoader className="w-24 h-24" />
+                            <h1>Uploading video</h1>
+                        </>
+                    ) : uploadedVideoId ? (
+                        <h1>{uploadedVideoId}</h1>
+                    ) : (
+                        <>
+                            <h1>Upload Video</h1>
+                            <VideoUploadForm handleOnChange={handleOnChange} />
+                        </>
+                    )}
+                    <Button
+                        text="Upload Now"
+                        onClick={submitVideo}
+                        loading={uploadingVideo}
                     />
-
-                    <Input
-                        label="Video Title"
-                        required={true}
-                        id="title"
-                        placeholder="Provide a brief Title of video"
-                        onChange={handleOnChange}
-                    />
-
-                    <TextareaInput
-                        label="Video Description"
-                        required={true}
-                        id="description"
-                        placeholder="Provide a brief summary of your video"
-                        onChange={handleOnChange}
-                    />
-
-                    <Input
-                        label="Video Tags"
-                        required={true}
-                        id="tags"
-                        placeholder="Write all tags sparated by ,"
-                        onChange={handleOnChange}
-                    />
-
-                    <FileInput
-                        label="Add Video Thumbnail"
-                        required={true}
-                        instructions="1920x1080 or 16:9 ratio. File types supported: JPG, PNG. Max size: 2 MB"
-                        onChange={handleOnChange}
-                        id="thumbnail"
-                        accept=".png, .jpg"
-                        isImage={true}
-                        maxSize={2}
-                    />
-
-                    <Button text="Upload Now" onClick={submitVideo} />
                 </div>
             </PopUpModal>
         </div>

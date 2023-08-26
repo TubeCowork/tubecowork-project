@@ -26,13 +26,15 @@ export const getObjectId = withTryCatch(
 export const fetchUserDetails = withTryCatch(
     async (userEmail: string): Promise<UserDetailsType> => {
         await connectToDB()
-        const user = await UserModel.findOne({ email: userEmail }).populate({
-            path: "ownedChannels",
-            model: YoutubeChannelModel,
-        }).populate({
-            path: "managedChannels",
-            model: YoutubeChannelModel,
-        })
+        const user = await UserModel.findOne({ email: userEmail })
+            .populate({
+                path: "ownedChannels",
+                model: YoutubeChannelModel,
+            })
+            .populate({
+                path: "managedChannels",
+                model: YoutubeChannelModel,
+            })
 
         if (!user) {
             throw Error("No user with this email")
@@ -45,7 +47,7 @@ export const fetchUserDetails = withTryCatch(
                     isVerified: channel.isVerified,
                 }
             }
-        )        
+        )
 
         const managedChannels = user?.managedChannels?.map(
             (channel: IYoutubeChannel) => {

@@ -18,7 +18,8 @@ export type YoutubeVideoType = {
 export type YoutubeVideoUploadDataType = {
     title: string
     description: string
-    tags: string
     videoFile: File
     thumbnailFile: File
+    tags: string
+    [index: string]: string | File
 }

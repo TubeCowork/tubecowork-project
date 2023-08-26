@@ -11,8 +11,8 @@ type ChannelEditorsType = {
 }
 
 function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
-    const [showAddEditorPopup, setShowAddEditorPopup] = useState(false);
-    
+    const [showAddEditorPopup, setShowAddEditorPopup] = useState(false)
+
     const [adding, setAdding] = useState(false)
     const [FormMsg, setFormMsg] = useState("")
     const addEditorToChannel = async (e: React.FormEvent) => {

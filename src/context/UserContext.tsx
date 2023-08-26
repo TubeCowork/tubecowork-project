@@ -13,9 +13,9 @@ import React, {
 } from "react"
 
 type UserDataContextType = {
-    user: UserDetailsType | undefined;
-    updateUser: () => Promise<void>;
-    loading: boolean;
+    user: UserDetailsType | undefined
+    updateUser: () => Promise<void>
+    loading: boolean
 }
 
 const UserDataContext = createContext<UserDataContextType>({
@@ -46,7 +46,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     }
 
     useEffect(() => {
-
         if (session?.user?.email) {
             updateUser()
         }
@@ -54,7 +53,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         session && (
-            <UserDataContext.Provider value={{ user, loading,updateUser }}>
+            <UserDataContext.Provider value={{ user, loading, updateUser }}>
                 {loading ? <h1>Loading user</h1> : children}
             </UserDataContext.Provider>
         )

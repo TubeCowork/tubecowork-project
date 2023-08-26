@@ -10,8 +10,8 @@ export default function page() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const code = searchParams.get("code")
-    const {updateUser} = useUserData();
-    const channelid = localStorage.getItem(channelIdForVerify);
+    const { updateUser } = useUserData()
+    const channelid = localStorage.getItem(channelIdForVerify)
 
     if (code && channelid) {
         const verifyCode = async () => {
@@ -20,10 +20,10 @@ export default function page() {
                     channelid,
                     code
                 )
-                console.log(verifiedChannel);
+                console.log(verifiedChannel)
 
                 router.push("/dashboard")
-                updateUser();
+                updateUser()
             } catch (error) {
                 console.log("verifyError: ", error)
             }

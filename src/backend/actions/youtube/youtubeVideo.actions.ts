@@ -1,5 +1,7 @@
-import UserModel from "@/backend/models/User.model"
-import YoutubeChannelModel from "@/backend/models/YoutubeChannel.model"
+import UserModel, { IUser } from "@/backend/models/User.model"
+import YoutubeChannelModel, {
+    IYoutubeChannel,
+} from "@/backend/models/YoutubeChannel.model"
 import {
     YoutubeVideoBasicType,
     YoutubeVideoUploadDataType,
@@ -7,12 +9,13 @@ import {
 import { ObjectId } from "mongoose"
 import { makeVideoPublic, uploadVideoUnlisted } from "./youtubeHelper"
 import VideoModel from "@/backend/models/YoutubeVideo.model"
+import { getObjectId } from "../user.actions"
 
-export const createYoutubeChannel = async (
+export const uploadVideoOnYoutube = async (
     videoDetails: YoutubeVideoUploadDataType,
-    channelId: ObjectId,
-    userid: ObjectId
-): Promise<YoutubeVideoBasicType> => {
+    channelId: string,
+    userid: string
+): Promise<string> => {
     try {
         const { title, description, tags, videoFile, thumbnailFile } =
             videoDetails
@@ -20,14 +23,28 @@ export const createYoutubeChannel = async (
         if (!title || !channelId || !videoFile || !thumbnailFile) {
             throw Error("Incomplete video data")
         }
-        const channel = await YoutubeChannelModel.findById(channelId)
+        const _channelObjectId = await getObjectId(channelId)
+        const channel: IYoutubeChannel | null =
+            await YoutubeChannelModel.findById(_channelObjectId)
         if (!channel?.isVerified) {
             throw Error("YouTube channel is not verified")
         }
-        const user = await UserModel.findById(userid)
+        const _userObjectId = await getObjectId(userid)
+        const user: IUser | null = await UserModel.findById(_userObjectId)
         if (!user) {
             throw Error("User not found")
         }
+        // TODO: check if user is editor or owner
+
+        if (
+            !channel.editors.includes(_userObjectId) &&
+            !(channel.owner === _userObjectId)
+        ) {
+            throw Error(
+                "You dont have any access to upload in this youtube channel"
+            )
+        }
+
         const { videoYoutubeId, videoURL, thumbnailURL } =
             await uploadVideoUnlisted(videoDetails, channel)
         const newVideo = new VideoModel({
@@ -45,7 +62,7 @@ export const createYoutubeChannel = async (
 
         // Save the updated channel
         await channel.save()
-        return savedVideo
+        return savedVideo.videoYoutubeId
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
         throw error
