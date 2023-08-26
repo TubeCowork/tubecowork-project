@@ -34,7 +34,7 @@ function PopUpModal({ children, isOpen, closeModal }: PopUpModalType) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-xl overflow-hidden py-12 shadow-xl transition-all  transform glassmorphism-box">
+              <Dialog.Panel className="overflow-hidden py-12 shadow-xl transition-all  transform glassmorphism-box">
                 {children}
               </Dialog.Panel>
             </Transition.Child>
