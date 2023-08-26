@@ -19,11 +19,11 @@ export const uploadVideoOnYoutube = async (
     userid: string
 ): Promise<string> => {
     try {
-        const title = videoDetails.get("title")
-        const description = videoDetails.get("description")
-        const tags = videoDetails.get("tags")
-        const videoFile = videoDetails.get("videoFile")
-        const thumbnailFile = videoDetails.get("thumbnailFile")
+        const title = videoDetails.get("title") as string
+        const description = videoDetails.get("description") as string
+        const tags = videoDetails.get("tags") as string
+        const videoFile = videoDetails.get("videoFile") as File
+        const thumbnailFile = videoDetails.get("thumbnailFile") as File
 
         console.log({ title, description, tags, videoFile, thumbnailFile })
 
@@ -51,26 +51,32 @@ export const uploadVideoOnYoutube = async (
             )
         }
 
-        return "wrong id"
 
-        // const { videoYoutubeId, videoURL, thumbnailURL } =
-        //     await uploadVideoUnlisted(videoDetails, channel)
-        // const newVideo = new VideoModel({
-        //     videoYoutubeId,
-        //     title,
-        //     video: videoURL,
-        //     thumbnail: thumbnailURL,
-        //     description,
-        //     tags, // comma-separated
-        //     isUploaded: true,
-        // })
+        const uploadDetails = {
+            title,
+            description,
+            tags,
+            videoFile,
+            thumbnailFile
+        }
 
-        // const savedVideo = await newVideo.save()
-        // channel.videos.push(savedVideo._id)
+        const { videoYoutubeId, videoURL, thumbnailURL } = await uploadVideoUnlisted(uploadDetails, channel)
+        const newVideo = new VideoModel({
+            videoYoutubeId,
+            title,
+            video: videoURL,
+            thumbnail: thumbnailURL,
+            description,
+            tags, // comma-separated
+            isUploaded: true,
+        })
 
-        // // Save the updated channel
-        // await channel.save()
-        // return savedVideo.videoYoutubeId
+        const savedVideo = await newVideo.save()
+        channel.videos.push(savedVideo._id)
+
+        // Save the updated channel
+        await channel.save()
+        return savedVideo.videoYoutubeId
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
         throw error

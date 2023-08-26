@@ -63,6 +63,8 @@ export const setChannelAsVerified = async (
             throw Error("Channel not found")
         }
         const verificationData = await verifyYoutubeChannel(verifyCode)
+        console.log("verificationData", verificationData);
+
         channel.isVerified = true
         channel.access_token = verificationData.access_token
         channel.refresh_token = verificationData.refresh_token

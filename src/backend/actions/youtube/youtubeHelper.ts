@@ -10,6 +10,7 @@ import {
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
 import { withTryCatch } from "@/utils/helper/trycatch"
+import { createReadStream } from "fs"
 
 const scopes = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -67,6 +68,8 @@ export const getYoutubeAuthUrl = withTryCatch(async () => {
     const url = auth.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
+        prompt: "select_account"
+        // state: "channelid"
     })
     return url
 })
@@ -102,11 +105,12 @@ export const uploadVideoUnlisted = async (
             },
         }
 
+
         // Upload the video
         // const res = await youtube.videos.insert({
         //     part: 'snippet,status',
         //     media: {
-        //         body: fs.createReadStream(videoFile),
+        //         body: createReadStream(videoDetails.videoFile),
         //     },
         //     requestBody: videoMetadata,
         // });
