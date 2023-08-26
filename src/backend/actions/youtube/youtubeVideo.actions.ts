@@ -1,3 +1,5 @@
+"use server"
+
 import UserModel, { IUser } from "@/backend/models/User.model"
 import YoutubeChannelModel, {
     IYoutubeChannel,
@@ -12,17 +14,23 @@ import VideoModel from "@/backend/models/YoutubeVideo.model"
 import { getObjectId } from "../user.actions"
 
 export const uploadVideoOnYoutube = async (
-    videoDetails: YoutubeVideoUploadDataType,
+    videoDetails: FormData,
     channelId: string,
     userid: string
 ): Promise<string> => {
     try {
-        const { title, description, tags, videoFile, thumbnailFile } =
-            videoDetails
+        const title = videoDetails.get("title")
+        const description = videoDetails.get("description")
+        const tags = videoDetails.get("tags")
+        const videoFile = videoDetails.get("videoFile")
+        const thumbnailFile = videoDetails.get("thumbnailFile")
 
-        if (!title || !channelId || !videoFile || !thumbnailFile) {
+        console.log({ title, description, tags, videoFile, thumbnailFile })
+
+        if (!title || !description || !tags || !videoFile || !thumbnailFile) {
             throw Error("Incomplete video data")
         }
+
         const _channelObjectId = await getObjectId(channelId)
         const channel: IYoutubeChannel | null =
             await YoutubeChannelModel.findById(_channelObjectId)
@@ -34,8 +42,6 @@ export const uploadVideoOnYoutube = async (
         if (!user) {
             throw Error("User not found")
         }
-        // TODO: check if user is editor or owner
-
         if (
             !channel.editors.includes(_userObjectId) &&
             !(channel.owner === _userObjectId)
@@ -45,24 +51,26 @@ export const uploadVideoOnYoutube = async (
             )
         }
 
-        const { videoYoutubeId, videoURL, thumbnailURL } =
-            await uploadVideoUnlisted(videoDetails, channel)
-        const newVideo = new VideoModel({
-            videoYoutubeId,
-            title,
-            video: videoURL,
-            thumbnail: thumbnailURL,
-            description,
-            tags, // comma-separated
-            isUploaded: true,
-        })
+        return "wrong id"
 
-        const savedVideo = await newVideo.save()
-        channel.videos.push(savedVideo._id)
+        // const { videoYoutubeId, videoURL, thumbnailURL } =
+        //     await uploadVideoUnlisted(videoDetails, channel)
+        // const newVideo = new VideoModel({
+        //     videoYoutubeId,
+        //     title,
+        //     video: videoURL,
+        //     thumbnail: thumbnailURL,
+        //     description,
+        //     tags, // comma-separated
+        //     isUploaded: true,
+        // })
 
-        // Save the updated channel
-        await channel.save()
-        return savedVideo.videoYoutubeId
+        // const savedVideo = await newVideo.save()
+        // channel.videos.push(savedVideo._id)
+
+        // // Save the updated channel
+        // await channel.save()
+        // return savedVideo.videoYoutubeId
     } catch (error) {
         console.error("Error creating YouTube channel:", error)
         throw error
@@ -74,21 +82,24 @@ export const approveUploadedVideo = async (
     videoId: ObjectId
 ) => {
     try {
-        const channel = await YoutubeChannelModel.findById(channelId)
-        const video = await VideoModel.findById(videoId)
+        const _channelObjectId = await getObjectId(channelId)
+        const channel = await YoutubeChannelModel.findById(_channelObjectId)
+
+        const _videoObjectId = await getObjectId(videoId)
+        const video = await VideoModel.findById(_videoObjectId)
 
         if (!channel || !video) {
             throw Error("Channel or video not found")
         }
 
-        const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
+        // const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
 
-        if (isSuccess) {
-            video.isApproved = true
-            await video.save()
-        } else {
-            throw Error("some error in approving video")
-        }
+        // if (isSuccess) {
+        //     video.isApproved = true
+        //     await video.save()
+        // } else {
+        //     throw Error("some error in approving video")
+        // }
     } catch (error) {
         console.error("Error in makeVideoPublicController:", error)
         throw error

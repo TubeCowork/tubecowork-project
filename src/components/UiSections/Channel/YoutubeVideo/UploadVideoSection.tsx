@@ -46,7 +46,6 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
     }
 
     const submitVideo = async () => {
-        // console.log(videoFormDetails);
         try {
             if (
                 !videoFormDetails.title ||
@@ -56,12 +55,12 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
             ) {
                 throw Error("All fileds are not added properly")
             }
-            setUploadingVideo(true)
+            // setUploadingVideo(true)
             const id = await uploadVideoFn({
                 ...videoFormDetails,
-                tags: videoFormDetails.tags || "",
+                tags: videoFormDetails.tags || "tag",
             } as YoutubeVideoUploadDataType)
-            setUploadedVideoId(id)
+            // setUploadedVideoId(id)
             // setIsUploadVideoPopupOpen(false);
         } catch (error) {
             console.log(error)

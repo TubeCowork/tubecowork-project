@@ -1,3 +1,5 @@
+"use client"
+
 import { fetchChannelDetails } from "@/backend/actions/user.actions"
 import { addEditorToChannel } from "@/backend/actions/youtube/youtubeChannel.actions"
 import { uploadVideoOnYoutube } from "@/backend/actions/youtube/youtubeVideo.actions"
@@ -32,7 +34,6 @@ const useChannel: useChannelType = (id, userid) => {
         try {
             const _channel = await fetchChannelDetails(id)
             setChannelDetails(_channel)
-            console.log("_channel", _channel)
             setLoading(false)
         } catch (error) {
             console.log("loadDetails error", error)
@@ -60,19 +61,27 @@ const useChannel: useChannelType = (id, userid) => {
         }
     }
 
+    function getFormData(object: any) {
+        const formData = new FormData()
+        Object.keys(object).forEach((key) => formData.append(key, object[key]))
+        return formData
+    }
+
     const uploadVideo = async (
         videoDetails: YoutubeVideoUploadDataType
     ): Promise<string> => {
         try {
             if (!channelDetails?.id || !userid)
                 throw Error("Channel or User id not provided")
-            // const _videoYtId = await uploadVideoOnYoutube(videoDetails, channelDetails?.id, userid)
-            // return _videoYtId
-
             console.log("videoDetails", videoDetails)
-            console.log("channelDetails?.id", channelDetails?.id)
-            console.log("userid", userid)
-            return "uploaded"
+            const formDataFromObj = getFormData(videoDetails)
+            const _videoYtId = await uploadVideoOnYoutube(
+                formDataFromObj,
+                channelDetails?.id,
+                userid
+            )
+            // return _videoYtId
+            return ""
         } catch (error) {
             throw error
         }
