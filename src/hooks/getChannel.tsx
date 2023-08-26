@@ -50,6 +50,7 @@ const useChannel: useChannelType = (id) => {
                 channelDetails?.id,
                 useremail
             )
+            loadDetails()
             return _editor
         } catch (error) {
             throw error

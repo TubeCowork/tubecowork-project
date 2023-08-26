@@ -29,6 +29,9 @@ export const fetchUserDetails = withTryCatch(
         const user = await UserModel.findOne({ email: userEmail }).populate({
             path: "ownedChannels",
             model: YoutubeChannelModel,
+        }).populate({
+            path: "managedChannels",
+            model: YoutubeChannelModel,
         })
 
         if (!user) {
@@ -42,7 +45,7 @@ export const fetchUserDetails = withTryCatch(
                     isVerified: channel.isVerified,
                 }
             }
-        )
+        )        
 
         const managedChannels = user?.managedChannels?.map(
             (channel: IYoutubeChannel) => {
