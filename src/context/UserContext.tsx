@@ -46,16 +46,12 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user?.email) {
             loadUser()
         }
-    }, [session]);
+    }, [session])
 
     return (
         session && (
             <UserDataContext.Provider value={{ user, loading }}>
-                {loading ?
-                    <h1>Loading user</h1>
-                    :
-                    children
-                }
+                {loading ? <h1>Loading user</h1> : children}
             </UserDataContext.Provider>
         )
     )

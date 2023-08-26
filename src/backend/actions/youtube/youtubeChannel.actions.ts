@@ -81,8 +81,8 @@ export const addEditorToChannel = async (
 ): Promise<UserBasicDetailsType> => {
     try {
         await connectToDB()
-        const _channelObjectId = await getObjectId(channelId);
-        const channel = await YoutubeChannelModel.findById(_channelObjectId);
+        const _channelObjectId = await getObjectId(channelId)
+        const channel = await YoutubeChannelModel.findById(_channelObjectId)
         if (!channel) {
             throw Error("YouTube channel not found")
         }
@@ -102,7 +102,7 @@ export const addEditorToChannel = async (
         return {
             id: String(editor._id),
             name: String(editor.name),
-            email: String(editor.email)
+            email: String(editor.email),
         }
     } catch (error) {
         console.error("Error creating YouTube channel:", error)

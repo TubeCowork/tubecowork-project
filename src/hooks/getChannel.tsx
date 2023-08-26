@@ -1,22 +1,22 @@
-import { fetchChannelDetails } from '@/backend/actions/user.actions';
-import { addEditorToChannel } from '@/backend/actions/youtube/youtubeChannel.actions';
-import { UserBasicDetailsType } from '@/utils/types/user';
-import { YoutubeChannelType } from '@/utils/types/youtube/channel';
-import React, { useEffect, useState } from 'react'
-
+import { fetchChannelDetails } from "@/backend/actions/user.actions"
+import { addEditorToChannel } from "@/backend/actions/youtube/youtubeChannel.actions"
+import { UserBasicDetailsType } from "@/utils/types/user"
+import { YoutubeChannelType } from "@/utils/types/youtube/channel"
+import React, { useEffect, useState } from "react"
 
 type useChannelReturnType = {
-    loading: boolean;
-    channelDetails: YoutubeChannelType | null;
-    addEditor?: (email: string) => Promise<UserBasicDetailsType>;
+    loading: boolean
+    channelDetails: YoutubeChannelType | null
+    addEditor?: (email: string) => Promise<UserBasicDetailsType>
 }
 type useChannelType = {
-    (id: string): useChannelReturnType;
+    (id: string): useChannelReturnType
 }
 
 const useChannel: useChannelType = (id) => {
-    const [loading, setLoading] = useState(true);
-    const [channelDetails, setChannelDetails] = useState<YoutubeChannelType | null>(null);
+    const [loading, setLoading] = useState(true)
+    const [channelDetails, setChannelDetails] =
+        useState<YoutubeChannelType | null>(null)
 
     if (!id) {
         return {
@@ -27,37 +27,39 @@ const useChannel: useChannelType = (id) => {
 
     const loadDetails = async () => {
         try {
-
-            const _channel = await fetchChannelDetails(id);
-            setChannelDetails(_channel);
-            console.log("_channel", _channel);
+            const _channel = await fetchChannelDetails(id)
+            setChannelDetails(_channel)
+            console.log("_channel", _channel)
             setLoading(false)
         } catch (error) {
-            console.log("loadDetails error", error);
+            console.log("loadDetails error", error)
         }
         setLoading(false)
     }
 
     useEffect(() => {
         loadDetails()
-    }, []);
+    }, [])
 
-
-    const addEditor = async (useremail: string): Promise<UserBasicDetailsType> => {
+    const addEditor = async (
+        useremail: string
+    ): Promise<UserBasicDetailsType> => {
         try {
             if (!channelDetails?.id) throw Error("Channel id not provided")
-            const _editor = await addEditorToChannel(channelDetails?.id, useremail);
+            const _editor = await addEditorToChannel(
+                channelDetails?.id,
+                useremail
+            )
             return _editor
         } catch (error) {
-            throw error;
+            throw error
         }
     }
-
 
     return {
         loading: loading,
         channelDetails: channelDetails,
-        addEditor
+        addEditor,
     }
 }
 
