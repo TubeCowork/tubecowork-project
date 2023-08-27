@@ -12,7 +12,7 @@ import {
 } from "@/utils/types/youtube/channel"
 import { withTryCatch } from "@/utils/helper/trycatch"
 import mongoose from "mongoose"
-import { IVideo } from "../models/YoutubeVideo.model"
+import VideoModel, { IVideo } from "../models/YoutubeVideo.model"
 
 export const getObjectId = withTryCatch(
     async (id: string): Promise<mongoose.Types.ObjectId> => {
@@ -79,6 +79,9 @@ export const fetchChannelDetails = withTryCatch(
         ).populate({
             path: "editors",
             model: UserModel,
+        }).populate({
+            path: "videos",
+            model: VideoModel,
         })
 
         if (!channel) {

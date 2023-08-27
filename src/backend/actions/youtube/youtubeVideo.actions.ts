@@ -61,6 +61,7 @@ export const uploadVideoOnYoutube = async (
         }
 
         const { videoYoutubeId, videoURL, thumbnailURL } = await uploadVideoUnlisted(uploadDetails, channel)
+        if (!videoYoutubeId) throw Error("There is no youtube id get")
         const newVideo = new VideoModel({
             videoYoutubeId,
             title,
@@ -69,16 +70,15 @@ export const uploadVideoOnYoutube = async (
             description,
             tags, // comma-separated
             isUploaded: true,
+            uploadedBy: user._id
         })
 
         const savedVideo = await newVideo.save()
         channel.videos.push(savedVideo._id)
-
-        // Save the updated channel
         await channel.save()
         return savedVideo.videoYoutubeId
     } catch (error) {
-        console.error("Error creating YouTube channel:", error)
+        console.error("uploadVideoOnYoutube:", error)
         throw error
     }
 }

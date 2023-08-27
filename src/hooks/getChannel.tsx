@@ -80,8 +80,8 @@ const useChannel: useChannelType = (id, userid) => {
                 channelDetails?.id,
                 userid
             )
-            // return _videoYtId
-            return ""
+            await loadDetails()
+            return _videoYtId
         } catch (error) {
             throw error
         }
