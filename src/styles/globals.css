@@ -5,7 +5,7 @@
 * {
     padding: 0;
     margin: 0;
-    /* line-height: normal; */
+    /* line-height:normal; */
 }
 
 .body {
@@ -21,8 +21,8 @@
 }
 
 @layer base {
-    .bg_primary {
-        @apply bg-primary-bg;
+    .body_primary {
+        @apply bg-primary-bg text-text-color;
     }
 
     .page_main {
@@ -40,11 +40,17 @@
 
     /* buttonsss */
     .btn_1 {
-        @apply text-text-color bg-primary hover:bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+        @apply text-text-color bg-primary hover:bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors 
+        text-sm px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
     }
 
     .btn_1_2 {
-        @apply text-text-color bg-transparent hover:border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+        @apply text-text-color bg-transparent hover:border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors 
+        text-sm   px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
     }
 
     .btn_2 {

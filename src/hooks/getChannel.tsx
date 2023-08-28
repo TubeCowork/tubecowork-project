@@ -2,18 +2,21 @@
 
 import { fetchChannelDetails } from "@/backend/actions/user.actions"
 import { addEditorToChannel } from "@/backend/actions/youtube/youtubeChannel.actions"
-import { approveUploadedVideo, uploadVideoOnYoutube } from "@/backend/actions/youtube/youtubeVideo.actions"
+import {
+    approveUploadedVideo,
+    uploadVideoOnYoutube,
+} from "@/backend/actions/youtube/youtubeVideo.actions"
 import { UserBasicDetailsType } from "@/utils/types/user"
 import { YoutubeChannelType } from "@/utils/types/youtube/channel"
 import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
 import React, { useEffect, useState } from "react"
 
 type useChannelReturnType = {
-    loading: boolean;
-    channelDetails: YoutubeChannelType | null;
-    addEditor?: (email: string) => Promise<UserBasicDetailsType>;
-    uploadVideo?: (videoData: YoutubeVideoUploadDataType) => Promise<string>;
-    approveVideo?: (videoId: string) => Promise<boolean>;
+    loading: boolean
+    channelDetails: YoutubeChannelType | null
+    addEditor?: (email: string) => Promise<UserBasicDetailsType>
+    uploadVideo?: (videoData: YoutubeVideoUploadDataType) => Promise<string>
+    approveVideo?: (videoId: string) => Promise<boolean>
 }
 type useChannelType = {
     (id: string, userid?: string): useChannelReturnType
@@ -90,11 +93,11 @@ const useChannel: useChannelType = (id, userid) => {
 
     const approveVideo = async (videoId: string): Promise<boolean> => {
         try {
-            const isApproved = await approveUploadedVideo(id, videoId);
+            const isApproved = await approveUploadedVideo(id, videoId)
             if (isApproved) {
-                loadDetails();
+                loadDetails()
             }
-            return isApproved;
+            return isApproved
         } catch (error) {
             throw error
         }
@@ -105,7 +108,7 @@ const useChannel: useChannelType = (id, userid) => {
         channelDetails: channelDetails,
         addEditor,
         uploadVideo,
-        approveVideo
+        approveVideo,
     }
 }
 

@@ -51,16 +51,16 @@ export const uploadVideoOnYoutube = async (
             )
         }
 
-
         const uploadDetails = {
             title,
             description,
             tags,
             videoFile,
-            thumbnailFile
+            thumbnailFile,
         }
 
-        const { videoYoutubeId, videoURL, thumbnailURL } = await uploadVideoUnlisted(uploadDetails, channel)
+        const { videoYoutubeId, videoURL, thumbnailURL } =
+            await uploadVideoUnlisted(uploadDetails, channel)
         if (!videoYoutubeId) throw Error("There is no youtube id get")
         const newVideo = new VideoModel({
             videoYoutubeId,
@@ -70,7 +70,7 @@ export const uploadVideoOnYoutube = async (
             description,
             tags, // comma-separated
             isUploaded: true,
-            uploadedBy: user._id
+            uploadedBy: user._id,
         })
 
         const savedVideo = await newVideo.save()
@@ -106,7 +106,7 @@ export const approveUploadedVideo = async (
         // } else {
         //     throw Error("some error in approving video")
         // }
-        return true;
+        return true
     } catch (error) {
         console.error("Error in makeVideoPublicController:", error)
         throw error

@@ -74,15 +74,15 @@ export const fetchChannelDetails = withTryCatch(
     async (channelid: string): Promise<YoutubeChannelType> => {
         await connectToDB()
         const channelObjectId = await getObjectId(channelid)
-        const channel = await YoutubeChannelModel.findById(
-            channelObjectId
-        ).populate({
-            path: "editors",
-            model: UserModel,
-        }).populate({
-            path: "videos",
-            model: VideoModel,
-        })
+        const channel = await YoutubeChannelModel.findById(channelObjectId)
+            .populate({
+                path: "editors",
+                model: UserModel,
+            })
+            .populate({
+                path: "videos",
+                model: VideoModel,
+            })
 
         if (!channel) {
             throw Error("no channel")

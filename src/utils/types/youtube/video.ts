@@ -1,7 +1,7 @@
 import { UserBasicDetailsType } from "../user"
 
 export type YoutubeVideoBasicType = {
-    id: string;
+    id: string
     videoYoutubeId: string
     title: string
     thumbnail: string

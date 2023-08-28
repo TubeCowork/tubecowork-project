@@ -10,18 +10,17 @@ import ChannelEditors from "@/components/UiSections/Channel/ChannelEditors"
 import UploadVideoSection from "@/components/UiSections/Channel/YoutubeVideo/UploadVideoSection"
 import { YoutubeVideoBasicType } from "@/utils/types/youtube/video"
 import VideoCard from "@/components/UiSections/Channel/YoutubeVideo/VideoCard"
+import PageLoader from "@/components/Loader/PageLoader"
 
 function page({ params }: { params: { id: string } }) {
     const { user } = useUserData()
     const { id: channelid } = params
 
     if (!channelid) return
-    const { channelDetails, loading, addEditor, uploadVideo, approveVideo } = useChannel(
-        channelid as string,
-        user?.id
-    )
+    const { channelDetails, loading, addEditor, uploadVideo, approveVideo } =
+        useChannel(channelid as string, user?.id)
     if (loading) {
-        return <h1>Loading Channel data</h1>
+        return <PageLoader text="Loading Channel Data..." />
     }
     const isOwner = user?.id === channelDetails?.owner
 
@@ -54,7 +53,12 @@ function page({ params }: { params: { id: string } }) {
                 <div className="flex flex-col gap-4">
                     {channelDetails?.videos?.map(
                         (video: YoutubeVideoBasicType, key) => (
-                            <VideoCard approveVideoFn={approveVideo} key={key} videoDetails={video} isOwner={isOwner} />
+                            <VideoCard
+                                approveVideoFn={approveVideo}
+                                key={key}
+                                videoDetails={video}
+                                isOwner={isOwner}
+                            />
                         )
                     )}
                 </div>

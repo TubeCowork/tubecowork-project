@@ -6,44 +6,46 @@ import Image from "next/image"
 import React, { useState } from "react"
 
 type VideoCardPropsType = {
-    videoDetails: YoutubeVideoBasicType;
-    isOwner: boolean;
+    videoDetails: YoutubeVideoBasicType
+    isOwner: boolean
     approveVideoFn?: (videoId: string) => Promise<Boolean>
 }
 
 function VideoCard({
     videoDetails,
     isOwner,
-    approveVideoFn
+    approveVideoFn,
 }: VideoCardPropsType) {
-    const [approving, setApproving] = useState(false);
+    const [approving, setApproving] = useState(false)
     const approveVideo = async () => {
         try {
             if (!approveVideoFn) throw Error("no function for this")
-            const isApproved = await approveVideoFn(videoDetails.id);
+            const isApproved = await approveVideoFn(videoDetails.id)
         } catch (error) {
-            console.log(error);
-
+            console.log(error)
         }
     }
 
-    console.log(videoDetails.thumbnail);
+    console.log(videoDetails.thumbnail)
 
     return (
         <div className="border border-blue-400 flex px-4 py-6 rounded-xl items-center">
             <div className="flex-1 flex">
-                <Image src={videoDetails.thumbnail} alt="thumnail" width={40} height={30} />
+                <Image
+                    src={videoDetails.thumbnail}
+                    alt="thumnail"
+                    width={40}
+                    height={30}
+                />
                 <p>Title: {videoDetails.title}</p>
             </div>
             <div className="flex gap-2">
                 {videoDetails.isApproved ? (
                     <p>Video uploaded publically</p>
+                ) : isOwner ? (
+                    <Button text="Approve" onClick={approveVideo} />
                 ) : (
-                    isOwner ? (
-                        <Button text="Approve" onClick={approveVideo} />
-                    ) : (
-                        <p>Owner has not approved yet</p>
-                    )
+                    <p>Owner has not approved yet</p>
                 )}
                 <Button
                     text="Watch Video"
