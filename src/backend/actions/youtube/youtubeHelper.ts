@@ -149,7 +149,7 @@ export const uploadVideoUnlisted = async (
         });
         const videoId = videoResponse.data.id
         const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
-        console.log("video upload with id: ", videoId, videoURL);
+        let thumbnailURL = "";
         try {
             if (videoId && videoDetails.thumbnailFile) {
                 const thumbnailReadable = await getReadStreamFromFile(videoDetails.thumbnailFile);
@@ -159,17 +159,17 @@ export const uploadVideoUnlisted = async (
                         body: thumbnailReadable,
                     },
                 });
-                console.log("thumbnail response", thumbnailResponse.data)
+                thumbnailURL = thumbnailResponse.data?.items?.at(0)?.high?.url as string;
             }
 
         } catch (error) {
             console.log("no thumbnail");
+            thumbnailURL = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
         }
 
 
 
         // Get the thumbnail URL
-        const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
 
         return { videoYoutubeId: videoId, videoURL, thumbnailURL }
     } catch (error) {

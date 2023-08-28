@@ -104,6 +104,7 @@ export const fetchChannelDetails = withTryCatch(
                 title: video.title,
                 thumbnail: video.thumbnail,
                 isApproved: video.isApproved,
+                isUploaded: video.isUploaded,
             }
         })
         return {

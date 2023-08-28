@@ -16,7 +16,7 @@ function page({ params }: { params: { id: string } }) {
     const { id: channelid } = params
 
     if (!channelid) return
-    const { channelDetails, loading, addEditor, uploadVideo } = useChannel(
+    const { channelDetails, loading, addEditor, uploadVideo, approveVideo } = useChannel(
         channelid as string,
         user?.id
     )
@@ -51,10 +51,10 @@ function page({ params }: { params: { id: string } }) {
 
             <div className="border px-4 py-6 m-4 border-red-500">
                 <h1 className="text_sub_heading_size">All Videos</h1>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-4">
                     {channelDetails?.videos?.map(
                         (video: YoutubeVideoBasicType, key) => (
-                            <VideoCard videoDetails={video} isOwner={isOwner} />
+                            <VideoCard approveVideoFn={approveVideo} key={key} videoDetails={video} isOwner={isOwner} />
                         )
                     )}
                 </div>

@@ -84,9 +84,9 @@ export const uploadVideoOnYoutube = async (
 }
 
 export const approveUploadedVideo = async (
-    channelId: ObjectId,
-    videoId: ObjectId
-) => {
+    channelId: string,
+    videoId: string
+): Promise<boolean> => {
     try {
         const _channelObjectId = await getObjectId(channelId)
         const channel = await YoutubeChannelModel.findById(_channelObjectId)
@@ -106,6 +106,7 @@ export const approveUploadedVideo = async (
         // } else {
         //     throw Error("some error in approving video")
         // }
+        return true;
     } catch (error) {
         console.error("Error in makeVideoPublicController:", error)
         throw error
