@@ -7,4 +7,3 @@ export const withTryCatch = <T>(fn: (...args: any[]) => Promise<T>) => {
         }
     }
 }
-

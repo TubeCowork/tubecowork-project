@@ -14,11 +14,13 @@ import React, {
 
 type UserDataContextType = {
     user: UserDetailsType | undefined
+    updateUser: () => Promise<void>
     loading: boolean
 }
 
 const UserDataContext = createContext<UserDataContextType>({
     user: undefined,
+    updateUser: async () => {},
     loading: false,
 })
 
@@ -37,25 +39,22 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true)
     const { data: session } = useSession()
 
+    const updateUser = async () => {
+        const user = await fetchUserDetails(session?.user?.email as string)
+        setUser(user)
+        setLoading(false)
+    }
+
     useEffect(() => {
-        const loadUser = async () => {
-            const user = await fetchUserDetails(session?.user?.email as string)
-            setUser(user)
-            setLoading(false)
-        }
         if (session?.user?.email) {
-            loadUser()
+            updateUser()
         }
-    }, [session]);
+    }, [session])
 
     return (
         session && (
-            <UserDataContext.Provider value={{ user, loading }}>
-                {loading ?
-                    <h1>Loading user</h1>
-                    :
-                    children
-                }
+            <UserDataContext.Provider value={{ user, loading, updateUser }}>
+                {loading ? <h1>Loading user</h1> : children}
             </UserDataContext.Provider>
         )
     )

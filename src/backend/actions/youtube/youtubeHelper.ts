@@ -10,6 +10,8 @@ import {
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
 import { withTryCatch } from "@/utils/helper/trycatch"
+import { createReadStream, readFile } from "fs"
+import { Readable, Stream } from "stream"
 
 const scopes = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -33,7 +35,7 @@ const isTokenExpired = (expiryTimestamp: number) => {
     return expiryTimestamp - fifteenMinutes < currentTimestamp
 }
 
-const authticateYoutubeWithChannel = async (channel: IYoutubeChannel) => {
+const authticateYoutubeWithChannel = async (channel: IYoutubeChannel): Promise<youtube_v3.Youtube> => {
     try {
         auth.setCredentials({
             access_token: channel.access_token,
@@ -67,6 +69,8 @@ export const getYoutubeAuthUrl = withTryCatch(async () => {
     const url = auth.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
+        prompt: "select_account"
+        // state: "channelid"
     })
     return url
 })
@@ -79,18 +83,44 @@ export const verifyYoutubeChannel = withTryCatch(
     }
 )
 
+async function bufferToReadableStream(buffer: Buffer) {
+    return new Promise((resolve, reject) => {
+
+        const bufferStream = new Stream.PassThrough();
+        bufferStream.end(buffer);
+
+        bufferStream.on('end', () => {
+            resolve(bufferStream);
+        });
+
+        bufferStream.on('error', (error) => {
+            reject(error);
+        });
+    });
+}
+
+const getReadStreamFromFile = async (file: File) => {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const steam = Readable.from(buffer);
+    return steam;
+
+}
 export const uploadVideoUnlisted = async (
     videoDetails: YoutubeVideoUploadDataType,
     channel: IYoutubeChannel
 ): Promise<{
-    videoYoutubeId: string
+    videoYoutubeId: string | null | undefined
     videoURL: string
     thumbnailURL: string
 }> => {
     try {
-        const youtube = await authticateYoutubeWithChannel(channel)
+        const youtube: youtube_v3.Youtube = await authticateYoutubeWithChannel(channel)
 
-        const videoMetadata: youtube_v3.Schema$Video = {
+        // const fileBuffer = readFile(videoDetails.videoFile,{encoding:null});
+        const videoFileStream = await getReadStreamFromFile(videoDetails.videoFile);
+
+        const requestBody: youtube_v3.Schema$Video = {
             snippet: {
                 title: videoDetails.title,
                 description: videoDetails.description,
@@ -99,34 +129,47 @@ export const uploadVideoUnlisted = async (
             },
             status: {
                 privacyStatus: "unlisted",
+                selfDeclaredMadeForKids: false,
             },
         }
 
+
+        const media = {
+            mimeType: 'video/*',
+            body: videoFileStream,
+        };
+
+
+        console.log("uploading started");
         // Upload the video
-        // const res = await youtube.videos.insert({
-        //     part: 'snippet,status',
-        //     media: {
-        //         body: fs.createReadStream(videoFile),
-        //     },
-        //     requestBody: videoMetadata,
-        // });
+        const videoResponse = await youtube.videos.insert({
+            part: ['snippet', 'status'],
+            media,
+            requestBody,
+        });
+        const videoId = videoResponse.data.id
+        const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
+        let thumbnailURL = "";
+        try {
+            if (videoId && videoDetails.thumbnailFile) {
+                const thumbnailReadable = await getReadStreamFromFile(videoDetails.thumbnailFile);
+                const thumbnailResponse = await youtube.thumbnails.set({
+                    videoId,
+                    media: {
+                        body: thumbnailReadable,
+                    },
+                });
+                thumbnailURL = thumbnailResponse.data?.items?.at(0)?.high?.url as string;
+            }
 
-        const videoId = ""
-        // Get the video ID and URL
-        // const videoId = res.data.id;
-        const videoURL = `https://www.youtube.com/watch?v=${videoId}`
+        } catch (error) {
+            console.log("no thumbnail");
+            thumbnailURL = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
+        }
 
-        // // Upload the video thumbnail
-        // await youtube.thumbnails.set({
-        //     videoId,
-        //     media: {
-        //         mimeType: 'image/jpeg',
-        //         body: fs.createReadStream(thumbnailFile),
-        //     },
-        // });
+
 
         // Get the thumbnail URL
-        const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
 
         return { videoYoutubeId: videoId, videoURL, thumbnailURL }
     } catch (error) {

@@ -1,5 +1,9 @@
-import UserModel from "@/backend/models/User.model"
-import YoutubeChannelModel from "@/backend/models/YoutubeChannel.model"
+"use server"
+
+import UserModel, { IUser } from "@/backend/models/User.model"
+import YoutubeChannelModel, {
+    IYoutubeChannel,
+} from "@/backend/models/YoutubeChannel.model"
 import {
     YoutubeVideoBasicType,
     YoutubeVideoUploadDataType,
@@ -7,29 +11,57 @@ import {
 import { ObjectId } from "mongoose"
 import { makeVideoPublic, uploadVideoUnlisted } from "./youtubeHelper"
 import VideoModel from "@/backend/models/YoutubeVideo.model"
+import { getObjectId } from "../user.actions"
 
-export const createYoutubeChannel = async (
-    videoDetails: YoutubeVideoUploadDataType,
-    channelId: ObjectId,
-    userid: ObjectId
-): Promise<YoutubeVideoBasicType> => {
+export const uploadVideoOnYoutube = async (
+    videoDetails: FormData,
+    channelId: string,
+    userid: string
+): Promise<string> => {
     try {
-        const { title, description, tags, videoFile, thumbnailFile } =
-            videoDetails
+        const title = videoDetails.get("title") as string
+        const description = videoDetails.get("description") as string
+        const tags = videoDetails.get("tags") as string
+        const videoFile = videoDetails.get("videoFile") as File
+        const thumbnailFile = videoDetails.get("thumbnailFile") as File
 
-        if (!title || !channelId || !videoFile || !thumbnailFile) {
+        console.log({ title, description, tags, videoFile, thumbnailFile })
+
+        if (!title || !description || !tags || !videoFile || !thumbnailFile) {
             throw Error("Incomplete video data")
         }
-        const channel = await YoutubeChannelModel.findById(channelId)
+
+        const _channelObjectId = await getObjectId(channelId)
+        const channel: IYoutubeChannel | null =
+            await YoutubeChannelModel.findById(_channelObjectId)
         if (!channel?.isVerified) {
             throw Error("YouTube channel is not verified")
         }
-        const user = await UserModel.findById(userid)
+        const _userObjectId = await getObjectId(userid)
+        const user: IUser | null = await UserModel.findById(_userObjectId)
         if (!user) {
             throw Error("User not found")
         }
-        const { videoYoutubeId, videoURL, thumbnailURL } =
-            await uploadVideoUnlisted(videoDetails, channel)
+        if (
+            !channel.editors.includes(_userObjectId) &&
+            !(channel.owner === _userObjectId)
+        ) {
+            throw Error(
+                "You dont have any access to upload in this youtube channel"
+            )
+        }
+
+
+        const uploadDetails = {
+            title,
+            description,
+            tags,
+            videoFile,
+            thumbnailFile
+        }
+
+        const { videoYoutubeId, videoURL, thumbnailURL } = await uploadVideoUnlisted(uploadDetails, channel)
+        if (!videoYoutubeId) throw Error("There is no youtube id get")
         const newVideo = new VideoModel({
             videoYoutubeId,
             title,
@@ -38,40 +70,43 @@ export const createYoutubeChannel = async (
             description,
             tags, // comma-separated
             isUploaded: true,
+            uploadedBy: user._id
         })
 
         const savedVideo = await newVideo.save()
         channel.videos.push(savedVideo._id)
-
-        // Save the updated channel
         await channel.save()
-        return savedVideo
+        return savedVideo.videoYoutubeId
     } catch (error) {
-        console.error("Error creating YouTube channel:", error)
+        console.error("uploadVideoOnYoutube:", error)
         throw error
     }
 }
 
 export const approveUploadedVideo = async (
-    channelId: ObjectId,
-    videoId: ObjectId
-) => {
+    channelId: string,
+    videoId: string
+): Promise<boolean> => {
     try {
-        const channel = await YoutubeChannelModel.findById(channelId)
-        const video = await VideoModel.findById(videoId)
+        const _channelObjectId = await getObjectId(channelId)
+        const channel = await YoutubeChannelModel.findById(_channelObjectId)
+
+        const _videoObjectId = await getObjectId(videoId)
+        const video = await VideoModel.findById(_videoObjectId)
 
         if (!channel || !video) {
             throw Error("Channel or video not found")
         }
 
-        const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
+        // const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
 
-        if (isSuccess) {
-            video.isApproved = true
-            await video.save()
-        } else {
-            throw Error("some error in approving video")
-        }
+        // if (isSuccess) {
+        //     video.isApproved = true
+        //     await video.save()
+        // } else {
+        //     throw Error("some error in approving video")
+        // }
+        return true;
     } catch (error) {
         console.error("Error in makeVideoPublicController:", error)
         throw error
