@@ -1,13 +1,18 @@
 "use client"
-import { createYoutubeChannel } from "@/backend/actions/youtube/youtubeChannel.actions"
+import {
+    createYoutubeChannel,
+    getAuthUrl,
+} from "@/backend/actions/youtube/youtubeChannel.actions"
 import Button from "@/components/Buttons/Button"
 import ChannelCard, {
     ChannelCardData,
 } from "@/components/UiSections/Channel/ChannelCard"
 import { useUserData } from "@/context/UserContext"
+import { useRouter } from "next/navigation"
 import React, { useState } from "react"
 
 function dashboard() {
+    const router = useRouter()
     const { loading, user, updateUser } = useUserData()
 
     const [creatingUser, setCreatingUser] = useState(false)
@@ -17,12 +22,11 @@ function dashboard() {
     }
 
     const createChannel = async () => {
-        const channelName = prompt("channel Name")
-        if (channelName && user?.email) {
+        if (user?.email) {
             try {
                 setCreatingUser(true)
-                await createYoutubeChannel(user?.id, channelName)
-                await updateUser()
+                const url = await getAuthUrl()
+                router.push(url)
                 setCreatingUser(false)
             } catch (error) {
                 console.log("createChannel", error)
@@ -33,16 +37,18 @@ function dashboard() {
 
     return (
         <section className="">
-            <div className="border border-primary p-10 my-10 mx-4">
-                <h3 className="text_sub_heading_size">You Own</h3>
-                <Button
-                    loading={creatingUser}
-                    text="Link Channel"
-                    onClick={createChannel}
-                />
+            <div className=" p-10 my-10 mx-4">
+                <div className="flex mb-4">
+                    <h3 className="text_sub_heading_size flex-1 ">You Own</h3>
+                    <Button
+                        loading={creatingUser}
+                        text="Add Youtube Channel"
+                        onClick={createChannel}
+                    />
+                </div>
 
                 {user?.ownedChannels?.length ? (
-                    <div className="flex gap-4 flex-wrap mt-4">
+                    <div className="flex gap-10 flex-wrap mt-4">
                         {user?.ownedChannels?.map((channel, key) => {
                             return (
                                 <ChannelCard key={key} channelData={channel} />
@@ -50,12 +56,12 @@ function dashboard() {
                         })}
                     </div>
                 ) : (
-                    <p>No owned youtube channels</p>
+                    <p>No Channel, Please create a channel</p>
                 )}
             </div>
 
-            <div className="border border-primary p-10 my-10 mx-4">
-                <h3 className="text_sub_heading_size">You Manage</h3>
+            <div className="p-10 my-10 mx-4">
+                <h3 className="text_sub_heading_size mb-4">You Manage</h3>
                 {user?.managedChannels?.length ? (
                     <div className="flex gap-4 flex-wrap mt-4">
                         {user?.managedChannels?.map((channel, key) => (
@@ -63,7 +69,7 @@ function dashboard() {
                         ))}
                     </div>
                 ) : (
-                    <p>No managedChannels youtube channels</p>
+                    <p>No Channels</p>
                 )}
             </div>
         </section>

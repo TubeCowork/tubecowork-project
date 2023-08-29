@@ -45,6 +45,7 @@ export const fetchUserDetails = withTryCatch(
                     id: String(channel._id),
                     name: channel.name,
                     isVerified: channel.isVerified,
+                    image: channel.image,
                 }
             }
         )
@@ -55,6 +56,7 @@ export const fetchUserDetails = withTryCatch(
                     id: String(channel._id),
                     name: channel.name,
                     isVerified: channel.isVerified,
+                    image: channel.image,
                 }
             }
         )

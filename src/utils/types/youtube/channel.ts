@@ -4,6 +4,7 @@ import { YoutubeVideoBasicType } from "./video"
 export type YoutubeChannelBasicType = {
     id: string
     name: string
+    image?: string
     isVerified: boolean
 }
 
@@ -14,6 +15,8 @@ export type YoutubeChannelType = YoutubeChannelBasicType & {
 }
 
 export type YoutubeChannelVerifedDataType = {
+    name: string
+    image: string
     access_token: string
     refresh_token: string
     expiry_date: number

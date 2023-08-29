@@ -51,28 +51,32 @@ export const getAuthUrl = async (): Promise<string> => {
 }
 
 export const setChannelAsVerified = async (
-    channelId: string,
+    userid: string,
     verifyCode: string
-): Promise<YoutubeChannelBasicType> => {
+): Promise<boolean> => {
     try {
         await connectToDB()
-        const channel = await YoutubeChannelModel.findById(
-            new mongoose.Types.ObjectId(channelId)
-        )
-        if (!channel) {
-            throw Error("Channel not found")
+        const userObjectId = await getObjectId(userid)
+        const user = await UserModel.findById(userObjectId)
+        if (!user) {
+            throw Error("User not found")
         }
         const verificationData = await verifyYoutubeChannel(verifyCode)
-        console.log("verificationData", verificationData)
-
-        channel.isVerified = true
-        channel.access_token = verificationData.access_token
-        channel.refresh_token = verificationData.refresh_token
-        channel.expiry = verificationData.expiry_date
-        await channel.save()
-        return channel
+        const newChannel = new YoutubeChannelModel({
+            name: verificationData.name,
+            image: verificationData.image,
+            isVerified: true,
+            access_token: verificationData.access_token,
+            refresh_token: verificationData.refresh_token,
+            expiry: verificationData.expiry_date,
+            owner: user._id,
+        })
+        const savedChannel = await newChannel.save()
+        user.ownedChannels.push(savedChannel._id)
+        await user.save()
+        return true
     } catch (error) {
-        console.error("Error creating YouTube channel:", error)
+        console.error("Error setChannelAsVerified:", error)
         throw error
     }
 }

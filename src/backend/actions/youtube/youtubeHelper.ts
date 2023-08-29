@@ -10,7 +10,6 @@ import {
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
 import { withTryCatch } from "@/utils/helper/trycatch"
-import { createReadStream, readFile } from "fs"
 import { Readable, Stream } from "stream"
 
 const scopes = [
@@ -81,24 +80,29 @@ export const verifyYoutubeChannel = withTryCatch(
     async (code: string): Promise<YoutubeChannelVerifedDataType> => {
         const { tokens } = await auth.getToken(code)
         auth.setCredentials(tokens)
-        return tokens as YoutubeChannelVerifedDataType
+        const youtube = google.youtube({
+            version: "v3",
+            auth,
+        })
+        const responseChannel = await youtube.channels.list({
+            part: ["snippet", "contentDetails", "statistics"],
+            mine: true,
+        })
+        let channelName = "your Channel"
+        let channelImage = "your Channel"
+        if (responseChannel?.data?.items) {
+            channelName = responseChannel?.data?.items[0].snippet
+                ?.title as string // Assuming there's only one channel
+            channelImage = responseChannel?.data?.items[0].snippet?.thumbnails
+                ?.high?.url as string // Assuming there's only one channel
+        }
+        return {
+            ...tokens,
+            name: channelName,
+            image: channelImage,
+        } as YoutubeChannelVerifedDataType
     }
 )
-
-async function bufferToReadableStream(buffer: Buffer) {
-    return new Promise((resolve, reject) => {
-        const bufferStream = new Stream.PassThrough()
-        bufferStream.end(buffer)
-
-        bufferStream.on("end", () => {
-            resolve(bufferStream)
-        })
-
-        bufferStream.on("error", (error) => {
-            reject(error)
-        })
-    })
-}
 
 const getReadStreamFromFile = async (file: File) => {
     const bytes = await file.arrayBuffer()
@@ -118,7 +122,6 @@ export const uploadVideoUnlisted = async (
         const youtube: youtube_v3.Youtube =
             await authticateYoutubeWithChannel(channel)
 
-        // const fileBuffer = readFile(videoDetails.videoFile,{encoding:null});
         const videoFileStream = await getReadStreamFromFile(
             videoDetails.videoFile
         )

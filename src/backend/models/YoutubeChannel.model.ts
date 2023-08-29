@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose"
 
 export interface IYoutubeChannel extends Document {
     name: string
+    image: string
     isVerified: boolean
     access_token: string
     refresh_token: string
@@ -16,6 +17,10 @@ const youtubeChannelSchema = new Schema<IYoutubeChannel>({
     name: {
         type: String,
         required: true,
+        trim: true,
+    },
+    image: {
+        type: String,
         trim: true,
     },
     isVerified: {
