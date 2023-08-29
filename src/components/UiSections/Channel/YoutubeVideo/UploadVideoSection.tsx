@@ -86,7 +86,7 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
                     setIsUploadVideoPopupOpen(false)
                 }}
             >
-                <div className="px-24 w-[50vw] h-[80vh] overflow-y-auto flex_center flex-col ">
+                <div className="px-24 w-[50vw] h-[80vh] overflow-y-auto ">
                     {uploadingVideo ? (
                         <>
                             <SimpleLoader className="w-24 h-24" />

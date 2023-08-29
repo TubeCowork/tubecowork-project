@@ -113,6 +113,7 @@ export const fetchChannelDetails = withTryCatch(
         return {
             id: String(channel._id),
             name: channel.name,
+            image: channel.image,
             isVerified: channel.isVerified,
             owner: String(channel.owner),
             editors,

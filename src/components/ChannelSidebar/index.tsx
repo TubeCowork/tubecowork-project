@@ -23,7 +23,7 @@ function ChannelSidebar({
     return (
         <div className="h-[92vh] w-[18rem]  border-r-2 border-secondary-hover ">
             <div className="flex_center flex-col w-full gap-2">
-                <span className="flex_center flex-col cursor-pointer pt-2 mb-4">
+                <span className="flex_center flex-col cursor-pointer pt-4 mb-4">
                     <Image
                         src={
                             channelDetails.image || "/images/channelavatar.png"
@@ -31,6 +31,7 @@ function ChannelSidebar({
                         width={120}
                         height={120}
                         alt="Picture"
+                        className="rounded-full"
                     />
 
                     <p className="text_sub_heading_size mb-4">

@@ -47,15 +47,24 @@ function page({ params }: { params: { id: string } }) {
                                 Recently Uploaded Videos
                             </h1>
                             <div className="flex flex-col gap-4 mx-6 mt-6">
-                                {channelDetails?.videos?.map(
-                                    (video: YoutubeVideoBasicType, key) => (
-                                        <VideoCard
-                                            approveVideoFn={approveVideo}
-                                            key={key}
-                                            videoDetails={video}
-                                            isOwner={isOwner}
-                                        />
+                                {channelDetails.videos?.length ? (
+                                    channelDetails?.videos?.map(
+                                        (video: YoutubeVideoBasicType, key) => (
+                                            <VideoCard
+                                                approveVideoFn={approveVideo}
+                                                key={key}
+                                                videoDetails={video}
+                                                isOwner={isOwner}
+                                            />
+                                        )
                                     )
+                                ) : (
+                                    <div className="flex_center w-full h-[20vh]">
+                                        <h1>
+                                            No Video in tubework history, Please
+                                            Upload
+                                        </h1>
+                                    </div>
                                 )}
                             </div>
                         </>

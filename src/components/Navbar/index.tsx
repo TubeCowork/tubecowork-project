@@ -20,7 +20,7 @@ function Navbar() {
                     alt="logo"
                 />
             </Link>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
                 {session ? (
                     <>
                         <Link href="/dashboard">
