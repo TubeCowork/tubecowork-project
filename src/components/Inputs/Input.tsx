@@ -37,7 +37,8 @@ function Input({
         <div className="flex flex-col gap-2 text-start">
             {label && (
                 <label htmlFor={id}>
-                    {label} {required && <span className="text-red-500">*</span>}
+                    {label}{" "}
+                    {required && <span className="text-red-500">*</span>}
                 </label>
             )}
             {instructions && <p>{instructions}</p>}
@@ -61,7 +62,5 @@ function Input({
         </div>
     )
 }
-
-
 
 export default Input

@@ -5,7 +5,7 @@ import React from "react"
 import { RiDeleteBack2Line } from "react-icons/ri"
 
 function EditorCard({ editor }: { editor: UserBasicDetailsType }) {
-    console.log(editor.image);
+    console.log(editor.image)
 
     return (
         <div className="w-full flex items-center justify-between h-24 bg-secondary-hover px-4 rounded-xl">

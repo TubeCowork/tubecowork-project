@@ -94,7 +94,9 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
                         </>
                     ) : uploadedVideoId ? (
                         <>
-                            <h1 className="text_highlight_gradient text_heading_size">Video Uploaded Successfully</h1>
+                            <h1 className="text_highlight_gradient text_heading_size">
+                                Video Uploaded Successfully
+                            </h1>
                         </>
                     ) : (
                         <>

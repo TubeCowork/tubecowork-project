@@ -103,7 +103,7 @@ export const approveUploadedVideo = async (
         if (isSuccess) {
             video.isApproved = true
             await video.save()
-            return true;
+            return true
         } else {
             throw Error("some error in approving video")
         }

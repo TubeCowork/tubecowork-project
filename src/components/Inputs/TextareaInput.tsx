@@ -64,8 +64,6 @@ const style = css`
             outline-style: none;
         }
     }
-
-
 `
 
 export default TextareaInput

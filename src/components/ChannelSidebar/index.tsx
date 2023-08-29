@@ -18,8 +18,7 @@ function ChannelSidebar({
     setSectionToShow,
     uploadVideoFn,
 }: ChannelSidebarProps) {
-
-    console.log(channelDetails.image);
+    console.log(channelDetails.image)
 
     return (
         <div className="h-[92vh] w-[18rem]  border-r-2 border-secondary-hover ">

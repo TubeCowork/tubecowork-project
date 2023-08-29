@@ -26,10 +26,11 @@ function Navbar() {
                         <Link href="/dashboard">
                             <Button
                                 text="Dashboard"
-                                className={`${pathname.startsWith("/dashboard")
-                                    ? "btn_1"
-                                    : "btn_1_2"
-                                    }`}
+                                className={`${
+                                    pathname.startsWith("/dashboard")
+                                        ? "btn_1"
+                                        : "btn_1_2"
+                                }`}
                             />
                         </Link>
                         {/* {session?.user?.name} */}

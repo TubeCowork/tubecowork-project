@@ -42,13 +42,13 @@ function VideoCard({
                 />
                 <div className="flex flex-col max-w-md">
                     <p className="text-lg line-clamp-1">{videoDetails.title}</p>
-                    <p className="text-sm text-text-color-light line-clamp-2">{videoDetails.description}</p>
+                    <p className="text-sm text-text-color-light line-clamp-2">
+                        {videoDetails.description}
+                    </p>
                 </div>
             </div>
             <div className="flex gap-2">
-
-                {(isOwner || videoDetails.isApproved)
-                    &&
+                {(isOwner || videoDetails.isApproved) && (
                     <Button
                         icon={<FaVideo />}
                         className="btn_1_2"
@@ -59,20 +59,23 @@ function VideoCard({
                             )
                         }}
                     />
-                }
+                )}
                 <Button
                     icon={<FaEdit />}
                     className="btn_1_2"
-                    onClick={() => {
-
-                    }}
+                    onClick={() => {}}
                 />
 
-                {!videoDetails.isApproved && (isOwner ? (
-                    <Button text="Approve" onClick={approveVideo} loading={approving} />
-                ) : (
-                    <Button text="Not Approved Yet" className="btn_1_2" />
-                ))}
+                {!videoDetails.isApproved &&
+                    (isOwner ? (
+                        <Button
+                            text="Approve"
+                            onClick={approveVideo}
+                            loading={approving}
+                        />
+                    ) : (
+                        <Button text="Not Approved Yet" className="btn_1_2" />
+                    ))}
             </div>
         </div>
     )

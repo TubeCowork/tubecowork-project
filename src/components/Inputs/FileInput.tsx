@@ -92,8 +92,9 @@ const FileInput: React.FC<FileInputProps> = ({
             {instructions && <p>{instructions}</p>}
 
             <div
-                className={`select_area ${isDraggingOver && "select_area_hover"
-                    }`}
+                className={`select_area ${
+                    isDraggingOver && "select_area_hover"
+                }`}
                 onDrop={handleFileDrop}
                 onDragOver={(e) => {
                     e.preventDefault()
@@ -168,7 +169,6 @@ const FileInput: React.FC<FileInputProps> = ({
 const style = css`
     .file_input_div {
         text-align: left;
-
     }
     .file_input_div p {
         font-size: 14px;
