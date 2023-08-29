@@ -15,8 +15,8 @@ type useChannelReturnType = {
     loading: boolean
     channelDetails: YoutubeChannelType | null
     uploadVideo: (videoData: YoutubeVideoUploadDataType) => Promise<string>
-    addEditor?: (email: string) => Promise<UserBasicDetailsType>
-    approveVideo?: (videoId: string) => Promise<boolean>
+    addEditor: (email: string) => Promise<UserBasicDetailsType>
+    approveVideo: (videoId: string) => Promise<boolean>
 }
 type useChannelType = {
     (id: string, userid?: string): useChannelReturnType

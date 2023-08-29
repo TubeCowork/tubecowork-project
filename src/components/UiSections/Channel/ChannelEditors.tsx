@@ -34,12 +34,18 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
     }
     return (
         <div>
-            <Button
-                text="Add New Editor"
-                onClick={() => {
-                    setShowAddEditorPopup(true)
-                }}
-            />
+            <div className="flex items-center justify-between mx-12">
+                <h1 className="text_sub_heading_size font-bold">
+                    Channel Editors
+                </h1>
+                <Button
+                    text="Add New Editor"
+                    className="btn_1_2"
+                    onClick={() => {
+                        setShowAddEditorPopup(true)
+                    }}
+                />
+            </div>
 
             {allEditors?.length ? (
                 <div className="flex gap-3 m-4">
@@ -50,7 +56,9 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
                     ))}
                 </div>
             ) : (
-                <h1>No Editors</h1>
+                <div className="flex_center w-full h-[20vh]">
+                    <h1>No Editors, Please Add</h1>
+                </div>
             )}
 
             <PopUpModal
@@ -59,11 +67,11 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
                     setShowAddEditorPopup(false)
                 }}
             >
-                <div className="">
-                    <h1>Add new Editor</h1>
+                <div className="px-24 py-12">
+                    <h1 className="text_sub_heading_size mb-4">Add New Editor</h1>
                     <form
                         onSubmit={addEditorToChannel}
-                        className="flex_center flex-col"
+                        className="flex_center flex-col gap-4"
                     >
                         <NormalInput
                             placeholder="Enter User Email"
@@ -73,6 +81,7 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
                         <Button
                             text="Add Editor"
                             type="submit"
+                            className="btn_1_2"
                             loading={adding}
                         />
                     </form>

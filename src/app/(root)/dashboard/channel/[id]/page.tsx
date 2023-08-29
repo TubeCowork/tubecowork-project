@@ -17,7 +17,7 @@ function page({ params }: { params: { id: string } }) {
     const { id: channelid } = params
 
     const [sectionToShow, setSectionToShow] =
-        useState<ChannelSectionType>("videos")
+        useState<ChannelSectionType>("editors")
 
     if (!channelid) return
     const { channelDetails, loading, addEditor, uploadVideo, approveVideo } =
@@ -39,44 +39,43 @@ function page({ params }: { params: { id: string } }) {
                 sectionToShow={sectionToShow}
                 uploadVideoFn={uploadVideo}
             />
+
             <div className="flex-1 overflow-x-hidden overflow-y-auto">
-                {sectionToShow === "editors" && (
-                    <>
-                        {isOwner ? (
-                            <div className="border px-4 py-6 m-4 border-red-500">
-                                <h1 className="text_sub_heading_size">
-                                    All Editors
-                                </h1>
-                                {addEditor && (
-                                    <ChannelEditors
-                                        addEditor={addEditor}
-                                        allEditors={channelDetails?.editors}
-                                    />
+                <div className="mt-6">
+
+                    {sectionToShow === "videos" && (
+                        <>
+                            <h1 className="text_sub_heading_size">All Videos</h1>
+                            <div className="flex flex-col gap-4">
+                                {channelDetails?.videos?.map(
+                                    (video: YoutubeVideoBasicType, key) => (
+                                        <VideoCard
+                                            approveVideoFn={approveVideo}
+                                            key={key}
+                                            videoDetails={video}
+                                            isOwner={isOwner}
+                                        />
+                                    )
                                 )}
                             </div>
-                        ) : (
-                            <h1>You are Dont have access here</h1>
-                        )}
-                    </>
-                )}
+                        </>
+                    )}
+                    {sectionToShow === "editors" && (
+                        <>
+                            {isOwner ? (
+                                <ChannelEditors
+                                    addEditor={addEditor}
+                                    allEditors={channelDetails?.editors}
+                                />
 
-                {sectionToShow === "videos" && (
-                    <div className="border px-4 py-6 m-4 border-red-500">
-                        <h1 className="text_sub_heading_size">All Videos</h1>
-                        <div className="flex flex-col gap-4">
-                            {channelDetails?.videos?.map(
-                                (video: YoutubeVideoBasicType, key) => (
-                                    <VideoCard
-                                        approveVideoFn={approveVideo}
-                                        key={key}
-                                        videoDetails={video}
-                                        isOwner={isOwner}
-                                    />
-                                )
+                            ) : (
+                                <h1>You are Dont have access here</h1>
                             )}
-                        </div>
-                    </div>
-                )}
+                        </>
+                    )}
+
+
+                </div>
             </div>
         </div>
     )
