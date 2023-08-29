@@ -14,8 +14,8 @@ import React, { useEffect, useState } from "react"
 type useChannelReturnType = {
     loading: boolean
     channelDetails: YoutubeChannelType | null
+    uploadVideo: (videoData: YoutubeVideoUploadDataType) => Promise<string>
     addEditor?: (email: string) => Promise<UserBasicDetailsType>
-    uploadVideo?: (videoData: YoutubeVideoUploadDataType) => Promise<string>
     approveVideo?: (videoId: string) => Promise<boolean>
 }
 type useChannelType = {
@@ -27,12 +27,14 @@ const useChannel: useChannelType = (id, userid) => {
     const [channelDetails, setChannelDetails] =
         useState<YoutubeChannelType | null>(null)
 
-    if (!id) {
-        return {
-            loading: false,
-            channelDetails: null,
-        }
-    }
+    // if (!id) {
+    //     return {
+    //         loading: false,
+    //         channelDetails: null,
+    //         uploadVideo: async (videoData: YoutubeVideoUploadDataType) => {}
+
+    //     }
+    // }
 
     const loadDetails = async () => {
         try {
@@ -46,8 +48,10 @@ const useChannel: useChannelType = (id, userid) => {
     }
 
     useEffect(() => {
-        loadDetails()
-    }, [])
+        if (id) {
+            loadDetails()
+        }
+    }, [id])
 
     const addEditor = async (
         useremail: string
@@ -105,9 +109,9 @@ const useChannel: useChannelType = (id, userid) => {
 
     return {
         loading: loading,
+        uploadVideo,
         channelDetails: channelDetails,
         addEditor,
-        uploadVideo,
         approveVideo,
     }
 }

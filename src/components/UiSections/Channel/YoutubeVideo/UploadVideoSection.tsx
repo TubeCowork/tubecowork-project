@@ -9,6 +9,7 @@ import PopUpModal from "@/components/Modal/PopUpModal"
 import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
 import React, { useState } from "react"
 import VideoUploadForm from "./VideoUploadForm"
+import { FaVideo } from "react-icons/fa"
 
 type YoutubeVideoUploadFormType = {
     title: string | null
@@ -71,7 +72,9 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
     return (
         <div>
             <Button
-                text="Upload Video"
+                icon={<FaVideo />}
+                text="Upload"
+                className="btn_1_2"
                 onClick={() => {
                     setIsUploadVideoPopupOpen(true)
                 }}

@@ -11,7 +11,7 @@ function Navbar() {
     const { data: session } = useSession()
     const pathname = usePathname()
     return (
-        <nav className="flex justify-between items-center px-12 py-4 shadow-2xl">
+        <nav className="flex justify-between items-center px-12 py-4 shadow-xl h-[8vh]">
             <Link href="/">
                 <Image
                     src="/logo/dark.png"

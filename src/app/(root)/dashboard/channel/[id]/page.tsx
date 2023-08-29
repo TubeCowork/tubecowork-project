@@ -8,15 +8,16 @@ import UploadVideoSection from "@/components/UiSections/Channel/YoutubeVideo/Upl
 import { YoutubeVideoBasicType } from "@/utils/types/youtube/video"
 import VideoCard from "@/components/UiSections/Channel/YoutubeVideo/VideoCard"
 import PageLoader from "@/components/Loader/PageLoader"
-import ChannelSidebar from "@/components/ChannelSidebar";
+import ChannelSidebar from "@/components/ChannelSidebar"
 
-type ChannelSectionType = string | "videos" | "editors";
+type ChannelSectionType = string | "videos" | "editors"
 
 function page({ params }: { params: { id: string } }) {
     const { user } = useUserData()
     const { id: channelid } = params
 
-    const [sectionToShow, setSectionToShow] = useState<ChannelSectionType>("videos")
+    const [sectionToShow, setSectionToShow] =
+        useState<ChannelSectionType>("videos")
 
     if (!channelid) return
     const { channelDetails, loading, addEditor, uploadVideo, approveVideo } =
@@ -32,34 +33,34 @@ function page({ params }: { params: { id: string } }) {
 
     return (
         <div className="flex">
-            <ChannelSidebar channelDetails={channelDetails} setSectionToShow={setSectionToShow} />
-
+            <ChannelSidebar
+                channelDetails={channelDetails}
+                setSectionToShow={setSectionToShow}
+                sectionToShow={sectionToShow}
+                uploadVideoFn={uploadVideo}
+            />
             <div className="flex-1 overflow-x-hidden overflow-y-auto">
-                {sectionToShow === "editors" &&
+                {sectionToShow === "editors" && (
                     <>
-                        {uploadVideo && <UploadVideoSection uploadVideoFn={uploadVideo} />}
-
                         {isOwner ? (
-                            <>
-                                <h1>You are Owner</h1>
-
-                                <div className="border px-4 py-6 m-4 border-red-500">
-                                    <h1 className="text_sub_heading_size">All Editors</h1>
-                                    {addEditor && (
-                                        <ChannelEditors
-                                            addEditor={addEditor}
-                                            allEditors={channelDetails?.editors}
-                                        />
-                                    )}
-                                </div>
-                            </>
+                            <div className="border px-4 py-6 m-4 border-red-500">
+                                <h1 className="text_sub_heading_size">
+                                    All Editors
+                                </h1>
+                                {addEditor && (
+                                    <ChannelEditors
+                                        addEditor={addEditor}
+                                        allEditors={channelDetails?.editors}
+                                    />
+                                )}
+                            </div>
                         ) : (
-                            <h1>You are manager</h1>
+                            <h1>You are Dont have access here</h1>
                         )}
                     </>
-                }
+                )}
 
-                {sectionToShow === "videos" &&
+                {sectionToShow === "videos" && (
                     <div className="border px-4 py-6 m-4 border-red-500">
                         <h1 className="text_sub_heading_size">All Videos</h1>
                         <div className="flex flex-col gap-4">
@@ -75,7 +76,7 @@ function page({ params }: { params: { id: string } }) {
                             )}
                         </div>
                     </div>
-                }
+                )}
             </div>
         </div>
     )
