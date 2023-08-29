@@ -5,6 +5,7 @@ import css from "styled-jsx/css"
 type InputProps = {
     id: string
     placeholder?: string
+    className?: string
     type?: string
     label?: string
     value?: string | number
@@ -20,6 +21,7 @@ type InputProps = {
 
 function Input({
     id,
+    className,
     placeholder,
     type,
     label,
@@ -32,10 +34,10 @@ function Input({
     disabled = false,
 }: InputProps) {
     return (
-        <div className="input_div">
+        <div className="flex flex-col gap-2 text-start">
             {label && (
                 <label htmlFor={id}>
-                    {label} {required && <span>*</span>}
+                    {label} {required && <span className="text-red-500">*</span>}
                 </label>
             )}
             {instructions && <p>{instructions}</p>}
@@ -43,6 +45,7 @@ function Input({
             <input
                 type={type ? type : "text"}
                 placeholder={placeholder ? placeholder : ""}
+                className={` input_1 ${className}`}
                 id={id}
                 name={id}
                 value={value}
@@ -55,41 +58,10 @@ function Input({
                 disabled={disabled}
                 step="any"
             />
-            <style jsx>{style}</style>
         </div>
     )
 }
 
-const style = css`
-    .input_div {
-        margin-top: 1rem;
-    }
 
-    .input_div p {
-        font-size: 14px;
-        color: gray;
-        margin: 0;
-        margin-bottom: 0.2rem;
-    }
-
-    .input_div > label {
-        font-size: 16px;
-        text-transform: none;
-        color: var(--ls-text-color);
-        & span {
-            color: var(--ls-error);
-        }
-    }
-
-    .input_div input {
-        margin-top: 0.4rem;
-    }
-
-    @media screen and (max-width: 700px) {
-        .input_div input {
-            width: 100% !important;
-        }
-    }
-`
 
 export default Input

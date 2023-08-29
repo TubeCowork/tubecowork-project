@@ -188,16 +188,15 @@ export const makeVideoPublic = async (
 ): Promise<boolean> => {
     try {
         const youtube = await authticateYoutubeWithChannel(channel)
-        // await youtube.videos.update({
-        //     part: 'status',
-        //     requestBody: {
-        //         id: videoYoutubeId,
-        //         status: {
-        //             privacyStatus: 'public',
-        //         },
-        //     },
-        // });
-
+        await youtube.videos.update({
+            part: ['status'],
+            requestBody: {
+                id: videoYoutubeId,
+                status: {
+                    privacyStatus: 'public',
+                },
+            },
+        });
         return true // Video is now public
     } catch (error) {
         throw error

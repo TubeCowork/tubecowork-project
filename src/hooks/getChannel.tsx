@@ -98,9 +98,7 @@ const useChannel: useChannelType = (id, userid) => {
     const approveVideo = async (videoId: string): Promise<boolean> => {
         try {
             const isApproved = await approveUploadedVideo(id, videoId)
-            if (isApproved) {
-                loadDetails()
-            }
+            loadDetails()
             return isApproved
         } catch (error) {
             throw error

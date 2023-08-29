@@ -98,15 +98,15 @@ export const approveUploadedVideo = async (
             throw Error("Channel or video not found")
         }
 
-        // const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
+        const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
 
-        // if (isSuccess) {
-        //     video.isApproved = true
-        //     await video.save()
-        // } else {
-        //     throw Error("some error in approving video")
-        // }
-        return true
+        if (isSuccess) {
+            video.isApproved = true
+            await video.save()
+            return true;
+        } else {
+            throw Error("some error in approving video")
+        }
     } catch (error) {
         console.error("Error in makeVideoPublicController:", error)
         throw error

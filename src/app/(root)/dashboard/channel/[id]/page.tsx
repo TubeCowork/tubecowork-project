@@ -3,7 +3,6 @@
 import React, { useState } from "react"
 import useChannel from "@/hooks/getChannel"
 import { useUserData } from "@/context/UserContext"
-import UploadVideoSection from "@/components/UiSections/Channel/YoutubeVideo/UploadVideoSection"
 import { YoutubeVideoBasicType } from "@/utils/types/youtube/video"
 import VideoCard from "@/components/UiSections/Channel/YoutubeVideo/VideoCard"
 import PageLoader from "@/components/Loader/PageLoader"
@@ -17,7 +16,7 @@ function page({ params }: { params: { id: string } }) {
     const { id: channelid } = params
 
     const [sectionToShow, setSectionToShow] =
-        useState<ChannelSectionType>("editors")
+        useState<ChannelSectionType>("videos")
 
     if (!channelid) return
     const { channelDetails, loading, addEditor, uploadVideo, approveVideo } =
@@ -40,14 +39,14 @@ function page({ params }: { params: { id: string } }) {
                 uploadVideoFn={uploadVideo}
             />
 
-            <div className="flex-1 ">
-                <div className="mt-6">
+            <div className="flex-1">
+                <div className="mt-6 ">
                     {sectionToShow === "videos" && (
                         <>
-                            <h1 className="text_sub_heading_size">
-                                All Videos
+                            <h1 className="text_sub_heading_size mx-12">
+                                Recently Uploaded Videos
                             </h1>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 mx-6 mt-6">
                                 {channelDetails?.videos?.map(
                                     (video: YoutubeVideoBasicType, key) => (
                                         <VideoCard

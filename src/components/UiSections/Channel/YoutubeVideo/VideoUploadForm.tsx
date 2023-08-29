@@ -9,7 +9,7 @@ type VideoUploadFormType = {
 
 function VideoUploadForm({ handleOnChange }: VideoUploadFormType) {
     return (
-        <div>
+        <div className="flex flex-col w-full gap-6">
             <FileInput
                 label="Upload Video File"
                 required={true}

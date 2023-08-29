@@ -4,6 +4,7 @@ export type YoutubeVideoBasicType = {
     id: string
     videoYoutubeId: string
     title: string
+    description: string
     thumbnail: string
     isUploaded: boolean
     isApproved: boolean
