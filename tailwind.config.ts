@@ -17,6 +17,7 @@ const config: Config = {
                 third: "#1f1f1f",
                 highlight: "#FCB040",
                 "text-color": "#FFFFFF",
+                "text-color-light": "#b3b3b3",
                 "text-color-2": "#000",
             },
         },

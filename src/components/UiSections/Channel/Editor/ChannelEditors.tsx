@@ -4,6 +4,7 @@ import NormalInput from "@/components/Inputs/NormalInput"
 import PopUpModal from "@/components/Modal/PopUpModal"
 import { UserBasicDetailsType } from "@/utils/types/user"
 import React, { useState } from "react"
+import EditorCard from "./EditorCard"
 
 type ChannelEditorsType = {
     addEditor: (email: string) => Promise<UserBasicDetailsType>
@@ -48,12 +49,10 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
             </div>
 
             {allEditors?.length ? (
-                <div className="flex gap-3 m-4">
-                    {allEditors.map((editor: UserBasicDetailsType, key) => (
-                        <span className="border border-blue-400 px-1 py-2">
-                            <h1 key={key}>name: {editor.name}</h1>
-                        </span>
-                    ))}
+                <div className="flex gap-3 flex-col mx-4 mt-6">
+                    {allEditors.map((editor: UserBasicDetailsType, key) => {
+                        return <EditorCard editor={editor} key={key} />
+                    })}
                 </div>
             ) : (
                 <div className="flex_center w-full h-[20vh]">
@@ -68,7 +67,9 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
                 }}
             >
                 <div className="px-24 py-12">
-                    <h1 className="text_sub_heading_size mb-4">Add New Editor</h1>
+                    <h1 className="text_sub_heading_size mb-4">
+                        Add New Editor
+                    </h1>
                     <form
                         onSubmit={addEditorToChannel}
                         className="flex_center flex-col gap-4"

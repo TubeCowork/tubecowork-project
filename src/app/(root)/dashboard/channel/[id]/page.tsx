@@ -3,12 +3,12 @@
 import React, { useState } from "react"
 import useChannel from "@/hooks/getChannel"
 import { useUserData } from "@/context/UserContext"
-import ChannelEditors from "@/components/UiSections/Channel/ChannelEditors"
 import UploadVideoSection from "@/components/UiSections/Channel/YoutubeVideo/UploadVideoSection"
 import { YoutubeVideoBasicType } from "@/utils/types/youtube/video"
 import VideoCard from "@/components/UiSections/Channel/YoutubeVideo/VideoCard"
 import PageLoader from "@/components/Loader/PageLoader"
 import ChannelSidebar from "@/components/ChannelSidebar"
+import ChannelEditors from "@/components/UiSections/Channel/Editor/ChannelEditors"
 
 type ChannelSectionType = string | "videos" | "editors"
 
@@ -40,12 +40,13 @@ function page({ params }: { params: { id: string } }) {
                 uploadVideoFn={uploadVideo}
             />
 
-            <div className="flex-1 overflow-x-hidden overflow-y-auto">
+            <div className="flex-1 ">
                 <div className="mt-6">
-
                     {sectionToShow === "videos" && (
                         <>
-                            <h1 className="text_sub_heading_size">All Videos</h1>
+                            <h1 className="text_sub_heading_size">
+                                All Videos
+                            </h1>
                             <div className="flex flex-col gap-4">
                                 {channelDetails?.videos?.map(
                                     (video: YoutubeVideoBasicType, key) => (
@@ -67,14 +68,11 @@ function page({ params }: { params: { id: string } }) {
                                     addEditor={addEditor}
                                     allEditors={channelDetails?.editors}
                                 />
-
                             ) : (
                                 <h1>You are Dont have access here</h1>
                             )}
                         </>
                     )}
-
-
                 </div>
             </div>
         </div>
