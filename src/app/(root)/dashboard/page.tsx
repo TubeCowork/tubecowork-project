@@ -33,12 +33,8 @@ function dashboard() {
 
     return (
         <section className="">
-            <h1>Dashboard</h1>
-
             <div className="border border-primary p-10 my-10 mx-4">
-                <h3 className="text_sub_heading_size">
-                    Channels which user own
-                </h3>
+                <h3 className="text_sub_heading_size">You Own</h3>
                 <Button
                     loading={creatingUser}
                     text="Link Channel"
@@ -59,9 +55,7 @@ function dashboard() {
             </div>
 
             <div className="border border-primary p-10 my-10 mx-4">
-                <h3 className="text_sub_heading_size">
-                    Channels which user Manage
-                </h3>
+                <h3 className="text_sub_heading_size">You Manage</h3>
                 {user?.managedChannels?.length ? (
                     <div className="flex gap-4 flex-wrap mt-4">
                         {user?.managedChannels?.map((channel, key) => (
