@@ -3,17 +3,15 @@ import React from "react"
 
 import { useSession, signIn, signOut } from "next-auth/react"
 import Button from "@/components/Buttons/Button"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 
 function Navbar() {
     const { data: session } = useSession()
-
-    const router = useRouter()
-
+    const pathname = usePathname()
     return (
-        <nav className="flex justify-between items-center px-12 py-4 shadow-xl">
+        <nav className="flex justify-between items-center px-12 py-4 shadow-2xl">
             <Link href="/">
                 <Image
                     src="/logo/dark.png"
@@ -26,15 +24,28 @@ function Navbar() {
                 {session ? (
                     <>
                         <Link href="/dashboard">
-                            <Button text="Dashboard" />
+                            <Button
+                                text="Dashboard"
+                                className={`${
+                                    pathname.startsWith("/dashboard")
+                                        ? "btn_1"
+                                        : "btn_1_2"
+                                }`}
+                            />
                         </Link>
                         {/* {session?.user?.name} */}
-                        <Button
+                        {/* <Button
                             text="Sign Out"
                             className="btn_1_2"
                             onClick={() => signOut({ callbackUrl: "/" })}
+                        /> */}
+                        <Image
+                            src={session?.user?.image || "/images/avatar.png"}
+                            width={50}
+                            height={50}
+                            alt="logo"
+                            className="rounded-full cursor-pointer"
                         />
-                        {/* <Image src={session?.user?.image || "/images/avatar.png"} width={40} height={40} alt="logo" /> */}
                         {/* <Image src={"/images/avatar.png"} width={40} height={40} alt="logo" /> */}
                     </>
                 ) : (

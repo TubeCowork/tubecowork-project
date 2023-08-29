@@ -2,8 +2,6 @@ import Button from "@/components/Buttons/Button"
 import { YoutubeChannelBasicType } from "@/utils/types/youtube/channel"
 import React from "react"
 import { useRouter } from "next/navigation"
-import { getAuthUrl } from "@/backend/actions/youtube/youtubeChannel.actions"
-import { channelIdForVerify } from "@/utils/constants/storage"
 import Image from "next/image"
 
 export type ChannelCardData = {

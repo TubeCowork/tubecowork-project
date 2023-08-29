@@ -41,6 +41,7 @@ function dashboard() {
                 <div className="flex mb-4">
                     <h3 className="text_sub_heading_size flex-1 ">You Own</h3>
                     <Button
+                        className="btn_1_2"
                         loading={creatingUser}
                         text="Add Youtube Channel"
                         onClick={createChannel}
