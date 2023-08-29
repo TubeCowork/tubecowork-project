@@ -1,6 +1,7 @@
 "use client"
 
 import { fetchUserDetails } from "@/backend/actions/user.actions"
+import PageLoader from "@/components/Loader/PageLoader"
 import { UserDetailsType } from "@/utils/types/user"
 import { YoutubeChannelBasicType } from "@/utils/types/youtube/channel"
 import { useSession } from "next-auth/react"
@@ -54,7 +55,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     return (
         session && (
             <UserDataContext.Provider value={{ user, loading, updateUser }}>
-                {loading ? <h1>Loading user</h1> : children}
+                {loading ? <PageLoader text="Loading User..." /> : children}
             </UserDataContext.Provider>
         )
     )

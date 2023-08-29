@@ -20,7 +20,7 @@ function PopUpModal({ children, isOpen, closeModal }: PopUpModalType) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black bg-opacity-25" />
+                    <div className="fixed inset-0 bg-secondary bg-opacity-30" />
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto ">
@@ -34,7 +34,7 @@ function PopUpModal({ children, isOpen, closeModal }: PopUpModalType) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="overflow-hidden py-12 shadow-xl transition-all  transform glassmorphism-box">
+                            <Dialog.Panel className="overflow-hidden py-12 shadow-xl transition-all transform glassmorphism-box">
                                 {children}
                             </Dialog.Panel>
                         </Transition.Child>

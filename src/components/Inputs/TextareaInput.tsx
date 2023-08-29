@@ -4,6 +4,7 @@ import css from "styled-jsx/css"
 
 type InputProps = {
     id: string
+    className?: number
     rows?: number
     cols?: number
     placeholder?: string
@@ -15,6 +16,7 @@ type InputProps = {
 
 function TextareaInput({
     id,
+    className,
     placeholder,
     label,
     value,
@@ -24,7 +26,7 @@ function TextareaInput({
     required,
 }: InputProps) {
     return (
-        <div className="textarea_div">
+        <div className="textarea_div w-full flex flex-col text-start">
             {label && (
                 <label htmlFor={id}>
                     {label} {required && <span>*</span>}
@@ -35,6 +37,7 @@ function TextareaInput({
                 placeholder={placeholder ? placeholder : ""}
                 id={id}
                 name={id}
+                className={` input_1 ${className}`}
                 value={value}
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                     onChange(id, e.target.value)
@@ -50,42 +53,15 @@ function TextareaInput({
 
 const style = css`
     .textarea_div textarea {
-        width: 36rem;
         height: 10rem;
-        border-radius: 0.6rem;
-        border: 1px solid black;
         background: transparent;
-        font-size: 0.875rem;
-        padding: 0.8em;
-        color: black;
-        display: flex;
 
         &:hover {
-            border: 1px solid white;
+            border: 1px solid var(--primary);
         }
         &:focus {
-            border: 1px solid white;
+            border: 1px solid var(--primary);
             outline-style: none;
-        }
-    }
-
-    @media screen and (max-width: 700px) {
-        .textarea_div textarea {
-            width: 100%;
-        }
-    }
-
-    .textarea_div p {
-        font-size: 14px;
-        color: gray;
-    }
-
-    .textarea_div > label {
-        font-size: 16px;
-        text-transform: none;
-        color: black;
-        & span {
-            color: red;
         }
     }
 `

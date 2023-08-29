@@ -2,17 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --primary: #f41b1b;
+    --primary-bg: #282828;
+    --secondary: #0f0f0f;
+    --secondary-hover: #3f3f3f;
+    --text-color: #ffffff;
+    --text-color-light: #b3b3b3;
+}
+
 * {
     padding: 0;
     margin: 0;
-    /* line-height: normal; */
+    /* line-height:normal; */
+}
+
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary-bg); /* Track color */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #727272; /* Thumb color */
+    border-radius: 5px; /* Rounded corners */
 }
 
 .body {
-    width: 100vw;
-    min-height: 100vh;
+    /* width: 100vw; */
+    /* min-height: 100vh; */
     overflow: "hidden";
     scroll-behavior: smooth;
+    font-family: "YouTube Sans", "Roboto", "Arial", sans-serif;
 }
 
 .full-h-w {
@@ -21,8 +44,8 @@
 }
 
 @layer base {
-    .bg_primary {
-        @apply bg-primary-bg;
+    .body_primary {
+        @apply bg-primary-bg text-text-color;
     }
 
     .page_main {
@@ -40,15 +63,36 @@
 
     /* buttonsss */
     .btn_1 {
-        @apply text-text-color bg-primary hover:bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+        @apply text-text-color bg-primary hover:bg-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors 
+        text-sm px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
     }
 
     .btn_1_2 {
-        @apply text-text-color bg-transparent hover:border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors text-sm px-4 py-2 gap-1 md:text-base md:px-6 md:py-2.5 md:gap-1.5 xl:text-xl xl:px-8 xl:py-3 xl:gap-2;
+        @apply text-text-color bg-transparent hover:border-primary-hover border-2 border-primary rounded-xl text-center inline-flex items-center transition-colors 
+        text-sm   px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
     }
 
     .btn_2 {
         @apply text-text-color bg-secondary hover:bg-secondary-hover border-secondary border-2 rounded-xl text-xl px-8 py-3 text-center inline-flex items-center gap-2;
+    }
+
+    .sidebar_btn {
+        @apply text-text-color bg-transparent hover:bg-third rounded-none text-center inline-flex items-center transition-colors w-full
+        border-0
+        text-sm   px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
+    }
+
+    .sidebar_btn_active {
+        @apply text-primary bg-third hover:bg-third border-0 border-l-4 border-primary rounded-none text-center inline-flex items-center transition-colors w-full
+        text-sm   px-4 py-2 gap-1 
+        md:text-base md:px-4 md:py-1.5 md:gap-1.5 
+        xl:text-xl xl:px-6 xl:py-2 xl:gap-2;
     }
 
     /* text gradient color ========= */
@@ -62,11 +106,11 @@
     }
 
     .text_sub_heading_size {
-        @apply xl:text-3xl lg:text-3xl md:text-2xl text-xl;
+        @apply xl:text-2xl lg:text-xl md:text-lg text-base;
     }
 
     .text_primary_gradient {
-        @apply font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-secondary;
+        @apply font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-highlight;
     }
 
     .text_primary_gradient_2 {
@@ -78,7 +122,7 @@
     }
 
     .input_1 {
-        @apply bg-primary-bg border border-primary text-text-color rounded-lg block w-full text-sm px-3 py-2.5 gap-1 md:text-base md:px-4 md:py-3 md:gap-1.5 xl:text-xl xl:px-6 xl:py-3 xl:gap-2;
+        @apply bg-primary-bg border hover:border-primary border-secondary-hover text-text-color rounded-lg block w-full text-sm px-3 py-2.5 gap-1 md:text-base md:px-4 md:py-3 md:gap-1.5 xl:text-xl xl:px-6 xl:py-3 xl:gap-2;
     }
 
     /* gradient colors */
@@ -99,7 +143,7 @@
     }
 
     .glassmorphism-box {
-        @apply rounded-xl border border-gray-200 bg-white/20 backdrop-blur p-5;
+        @apply rounded-xl border-2 border-secondary-hover bg-secondary-hover/20 backdrop-blur;
         /* @apply rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199, 199, 199, 0.2)] backdrop-blur p-5; */
     }
 }

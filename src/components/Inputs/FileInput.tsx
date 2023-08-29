@@ -167,6 +167,9 @@ const FileInput: React.FC<FileInputProps> = ({
 }
 
 const style = css`
+    .file_input_div {
+        text-align: left;
+    }
     .file_input_div p {
         font-size: 14px;
         color: gray;
@@ -175,9 +178,9 @@ const style = css`
     .file_input_div > label {
         font-size: 16px;
         text-transform: none;
-        color: var(--ls-text-color);
+        color: var(--text-color);
         & span {
-            color: var(--ls-error);
+            color: var(--primary);
         }
     }
 
@@ -189,8 +192,9 @@ const style = css`
         gap: 4px;
     }
     .file_input_div .select_area {
-        width: 440px;
-        height: 300px;
+        /* width: 240px; */
+        /* max-width: 400px; */
+        height: 180px;
         border: 2px dashed gray;
         padding: 28px 40px;
         display: flex;
@@ -202,8 +206,8 @@ const style = css`
         border-radius: 1rem;
 
         &:hover {
-            border: 2px solid var(--ls-light-gray-light);
-            background-color: var(--ls-light-gray-light);
+            border: 2px solid var(--primary);
+            background-color: var(--primary-bg);
         }
     }
 
@@ -216,13 +220,10 @@ const style = css`
         width: 100%;
         /* height: 100%; */
         max-width: 380px;
-        max-height: 260px;
+        max-height: 120px;
     }
     .file_input_div img {
-        width: 100%;
-        /* height: 100%; */
-        max-width: 380px;
-        max-height: 240px;
+        max-height: 100px;
     }
 
     @media screen and (max-width: 700px) {

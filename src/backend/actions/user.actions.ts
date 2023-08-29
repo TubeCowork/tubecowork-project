@@ -45,6 +45,7 @@ export const fetchUserDetails = withTryCatch(
                     id: String(channel._id),
                     name: channel.name,
                     isVerified: channel.isVerified,
+                    image: channel.image,
                 }
             }
         )
@@ -55,6 +56,7 @@ export const fetchUserDetails = withTryCatch(
                     id: String(channel._id),
                     name: channel.name,
                     isVerified: channel.isVerified,
+                    image: channel.image,
                 }
             }
         )
@@ -74,15 +76,15 @@ export const fetchChannelDetails = withTryCatch(
     async (channelid: string): Promise<YoutubeChannelType> => {
         await connectToDB()
         const channelObjectId = await getObjectId(channelid)
-        const channel = await YoutubeChannelModel.findById(
-            channelObjectId
-        ).populate({
-            path: "editors",
-            model: UserModel,
-        }).populate({
-            path: "videos",
-            model: VideoModel,
-        })
+        const channel = await YoutubeChannelModel.findById(channelObjectId)
+            .populate({
+                path: "editors",
+                model: UserModel,
+            })
+            .populate({
+                path: "videos",
+                model: VideoModel,
+            })
 
         if (!channel) {
             throw Error("no channel")
@@ -102,6 +104,7 @@ export const fetchChannelDetails = withTryCatch(
                 id: String(video._id),
                 videoYoutubeId: video.videoYoutubeId,
                 title: video.title,
+                description: video.description,
                 thumbnail: video.thumbnail,
                 isApproved: video.isApproved,
                 isUploaded: video.isUploaded,
@@ -110,6 +113,7 @@ export const fetchChannelDetails = withTryCatch(
         return {
             id: String(channel._id),
             name: channel.name,
+            image: channel.image,
             isVerified: channel.isVerified,
             owner: String(channel.owner),
             editors,

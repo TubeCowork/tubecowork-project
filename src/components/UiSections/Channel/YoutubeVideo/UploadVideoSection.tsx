@@ -9,6 +9,7 @@ import PopUpModal from "@/components/Modal/PopUpModal"
 import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
 import React, { useState } from "react"
 import VideoUploadForm from "./VideoUploadForm"
+import { FaViadeo, FaVideo, FaVideoSlash } from "react-icons/fa"
 
 type YoutubeVideoUploadFormType = {
     title: string | null
@@ -71,7 +72,9 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
     return (
         <div>
             <Button
-                text="Upload Video"
+                icon={<FaVideo />}
+                text="Upload"
+                className="btn_1_2"
                 onClick={() => {
                     setIsUploadVideoPopupOpen(true)
                 }}
@@ -83,25 +86,30 @@ function UploadVideoSection({ uploadVideoFn }: uploadVideoSectionType) {
                     setIsUploadVideoPopupOpen(false)
                 }}
             >
-                <div className="px-24">
+                <div className="px-24 w-[50vw] h-[80vh] overflow-y-auto ">
                     {uploadingVideo ? (
                         <>
                             <SimpleLoader className="w-24 h-24" />
-                            <h1>Uploading video</h1>
+                            <h1>Uploading Video... Please Wait...</h1>
                         </>
                     ) : uploadedVideoId ? (
-                        <h1>{uploadedVideoId}</h1>
+                        <>
+                            <h1 className="text_highlight_gradient text_heading_size">
+                                Video Uploaded Successfully
+                            </h1>
+                        </>
                     ) : (
                         <>
-                            <h1>Upload Video</h1>
                             <VideoUploadForm handleOnChange={handleOnChange} />
+                            <Button
+                                icon={<FaVideo />}
+                                text="Upload Now"
+                                className="mt-6 btn_1_2"
+                                onClick={submitVideo}
+                                loading={uploadingVideo}
+                            />
                         </>
                     )}
-                    <Button
-                        text="Upload Now"
-                        onClick={submitVideo}
-                        loading={uploadingVideo}
-                    />
                 </div>
             </PopUpModal>
         </div>

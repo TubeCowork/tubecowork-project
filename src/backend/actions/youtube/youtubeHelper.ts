@@ -10,7 +10,6 @@ import {
     YoutubeChannelVerifedDataType,
 } from "@/utils/types/youtube/channel"
 import { withTryCatch } from "@/utils/helper/trycatch"
-import { createReadStream, readFile } from "fs"
 import { Readable, Stream } from "stream"
 
 const scopes = [
@@ -35,7 +34,9 @@ const isTokenExpired = (expiryTimestamp: number) => {
     return expiryTimestamp - fifteenMinutes < currentTimestamp
 }
 
-const authticateYoutubeWithChannel = async (channel: IYoutubeChannel): Promise<youtube_v3.Youtube> => {
+const authticateYoutubeWithChannel = async (
+    channel: IYoutubeChannel
+): Promise<youtube_v3.Youtube> => {
     try {
         auth.setCredentials({
             access_token: channel.access_token,
@@ -69,7 +70,7 @@ export const getYoutubeAuthUrl = withTryCatch(async () => {
     const url = auth.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
-        prompt: "select_account"
+        prompt: "select_account",
         // state: "channelid"
     })
     return url
@@ -79,32 +80,35 @@ export const verifyYoutubeChannel = withTryCatch(
     async (code: string): Promise<YoutubeChannelVerifedDataType> => {
         const { tokens } = await auth.getToken(code)
         auth.setCredentials(tokens)
-        return tokens as YoutubeChannelVerifedDataType
+        const youtube = google.youtube({
+            version: "v3",
+            auth,
+        })
+        const responseChannel = await youtube.channels.list({
+            part: ["snippet", "contentDetails", "statistics"],
+            mine: true,
+        })
+        let channelName = "your Channel"
+        let channelImage = "your Channel"
+        if (responseChannel?.data?.items) {
+            channelName = responseChannel?.data?.items[0].snippet
+                ?.title as string // Assuming there's only one channel
+            channelImage = responseChannel?.data?.items[0].snippet?.thumbnails
+                ?.high?.url as string // Assuming there's only one channel
+        }
+        return {
+            ...tokens,
+            name: channelName,
+            image: channelImage,
+        } as YoutubeChannelVerifedDataType
     }
 )
 
-async function bufferToReadableStream(buffer: Buffer) {
-    return new Promise((resolve, reject) => {
-
-        const bufferStream = new Stream.PassThrough();
-        bufferStream.end(buffer);
-
-        bufferStream.on('end', () => {
-            resolve(bufferStream);
-        });
-
-        bufferStream.on('error', (error) => {
-            reject(error);
-        });
-    });
-}
-
 const getReadStreamFromFile = async (file: File) => {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const steam = Readable.from(buffer);
-    return steam;
-
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    const steam = Readable.from(buffer)
+    return steam
 }
 export const uploadVideoUnlisted = async (
     videoDetails: YoutubeVideoUploadDataType,
@@ -115,10 +119,12 @@ export const uploadVideoUnlisted = async (
     thumbnailURL: string
 }> => {
     try {
-        const youtube: youtube_v3.Youtube = await authticateYoutubeWithChannel(channel)
+        const youtube: youtube_v3.Youtube =
+            await authticateYoutubeWithChannel(channel)
 
-        // const fileBuffer = readFile(videoDetails.videoFile,{encoding:null});
-        const videoFileStream = await getReadStreamFromFile(videoDetails.videoFile);
+        const videoFileStream = await getReadStreamFromFile(
+            videoDetails.videoFile
+        )
 
         const requestBody: youtube_v3.Schema$Video = {
             snippet: {
@@ -133,41 +139,39 @@ export const uploadVideoUnlisted = async (
             },
         }
 
-
         const media = {
-            mimeType: 'video/*',
+            mimeType: "video/*",
             body: videoFileStream,
-        };
+        }
 
-
-        console.log("uploading started");
+        console.log("uploading started")
         // Upload the video
         const videoResponse = await youtube.videos.insert({
-            part: ['snippet', 'status'],
+            part: ["snippet", "status"],
             media,
             requestBody,
-        });
+        })
         const videoId = videoResponse.data.id
-        const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
-        let thumbnailURL = "";
+        const videoURL = `https://www.youtube.com/watch?v=${videoId}`
+        let thumbnailURL = ""
         try {
             if (videoId && videoDetails.thumbnailFile) {
-                const thumbnailReadable = await getReadStreamFromFile(videoDetails.thumbnailFile);
+                const thumbnailReadable = await getReadStreamFromFile(
+                    videoDetails.thumbnailFile
+                )
                 const thumbnailResponse = await youtube.thumbnails.set({
                     videoId,
                     media: {
                         body: thumbnailReadable,
                     },
-                });
-                thumbnailURL = thumbnailResponse.data?.items?.at(0)?.high?.url as string;
+                })
+                thumbnailURL = thumbnailResponse.data?.items?.at(0)?.high
+                    ?.url as string
             }
-
         } catch (error) {
-            console.log("no thumbnail");
+            console.log("no thumbnail")
             thumbnailURL = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
         }
-
-
 
         // Get the thumbnail URL
 
@@ -184,16 +188,15 @@ export const makeVideoPublic = async (
 ): Promise<boolean> => {
     try {
         const youtube = await authticateYoutubeWithChannel(channel)
-        // await youtube.videos.update({
-        //     part: 'status',
-        //     requestBody: {
-        //         id: videoYoutubeId,
-        //         status: {
-        //             privacyStatus: 'public',
-        //         },
-        //     },
-        // });
-
+        await youtube.videos.update({
+            part: ["status"],
+            requestBody: {
+                id: videoYoutubeId,
+                status: {
+                    privacyStatus: "public",
+                },
+            },
+        })
         return true // Video is now public
     } catch (error) {
         throw error

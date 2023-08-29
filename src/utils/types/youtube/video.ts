@@ -1,9 +1,10 @@
 import { UserBasicDetailsType } from "../user"
 
 export type YoutubeVideoBasicType = {
-    id: string;
+    id: string
     videoYoutubeId: string
     title: string
+    description: string
     thumbnail: string
     isUploaded: boolean
     isApproved: boolean
