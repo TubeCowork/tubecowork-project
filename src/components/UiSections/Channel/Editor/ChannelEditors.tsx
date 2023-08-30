@@ -30,7 +30,8 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
         } catch (error: any) {
             setAdding(false)
             console.log("addEditorToChannel", error)
-            setFormMsg(error?.message)
+            // setFormMsg(error?.message)
+            setFormMsg("User do not exits. Please check your email")
         }
     }
     return (
