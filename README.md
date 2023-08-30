@@ -1,4 +1,4 @@
-# TubeWork (formerly MediaCowork)
+# TubeWork
 
 TubeWork is a collaborative platform designed to streamline YouTube content creation and management. It empowers content creators, managers, and editors to work seamlessly together, simplifying video uploads, metadata editing, approval workflows, and scheduling.
 
