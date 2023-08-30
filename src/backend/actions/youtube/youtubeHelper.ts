@@ -20,7 +20,7 @@ const scopes = [
 const scopes_string =
     "https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly"
 
-const redirectUri = "http://localhost:3000/dashboard/verifychannel"
+const redirectUri = process.env.CHANNEL_VERIFY_REDIRECT
 const auth = new google.auth.OAuth2({
     clientId: process.env.GOOGLE_CLIENT_ID || "",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
