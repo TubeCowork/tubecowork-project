@@ -4,7 +4,7 @@ type ImageProps = {
     className: string
 }
 
-const CustomImage: React.FC<ImageProps> = ({ src, alt, className }) => {
+const Image: React.FC<ImageProps> = ({ src, alt, className }) => {
     return <img src={src} className={className} alt={alt} />
 }
 

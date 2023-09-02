@@ -5,6 +5,7 @@ export type YoutubeVideoBasicType = {
     videoYoutubeId: string
     title: string
     description: string
+    tags?: string,
     thumbnail: string
     isUploaded: boolean
     isApproved: boolean
@@ -25,3 +26,15 @@ export type YoutubeVideoUploadDataType = {
     tags: string
     [index: string]: string | File
 }
+
+export type YoutubeVideoUploadFormType = {
+    title: string | null;
+    description: string | null;
+    tags: string | null;
+    videoFile?: File | null;
+    videoURL?: string;
+    thumbnailFile?: File | null;
+    thumbnailURL?: string;
+}
+
+export type YoutubeVideoUploadFormPartial = Partial<YoutubeVideoUploadFormType>;

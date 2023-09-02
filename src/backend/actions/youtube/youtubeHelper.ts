@@ -136,6 +136,7 @@ export const uploadVideoUnlisted = async (
             status: {
                 privacyStatus: "unlisted",
                 selfDeclaredMadeForKids: false,
+                embeddable: true
             },
         }
 

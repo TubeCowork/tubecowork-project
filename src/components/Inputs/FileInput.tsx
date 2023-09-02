@@ -4,6 +4,7 @@ import css from "styled-jsx/css"
 
 import { VscFileMedia } from "react-icons/vsc"
 import { mbToBytes } from "@/utils/helper/generic"
+import Button from "../Buttons/Button"
 
 type FileInputProps = {
     onChange: (id: string, file: File | null) => void
@@ -65,7 +66,7 @@ const FileInput: React.FC<FileInputProps> = ({
     }
 
     const handleSelectFile = (
-        e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
+        e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement>
     ) => {
         setSelectedFileURL("")
         e.preventDefault()
@@ -92,15 +93,15 @@ const FileInput: React.FC<FileInputProps> = ({
             {instructions && <p>{instructions}</p>}
 
             <div
-                className={`select_area ${
-                    isDraggingOver && "select_area_hover"
-                }`}
+                className={`select_area ${isDraggingOver && "select_area_hover"
+                    }`}
                 onDrop={handleFileDrop}
                 onDragOver={(e) => {
                     e.preventDefault()
                     setIsDraggingOver(true)
                 }}
                 onDragLeave={() => setIsDraggingOver(false)}
+                onClick={handleSelectFile}
             >
                 {selectedFile ? (
                     <>
@@ -127,24 +128,19 @@ const FileInput: React.FC<FileInputProps> = ({
                                     />
                                 )
                             ))}
-                        <a
-                            onClick={handleSelectFile}
-                            href=""
-                            className="ls-link-secondary"
-                        >
+                        <p className="cursor-pointer">
                             Choose New File
-                        </a>
+                        </p>
                     </>
                 ) : (
                     <>
                         <VscFileMedia size="60px" />
                         <div>
-                            <button
-                                onClick={handleSelectFile}
-                                className="ls-button-light"
-                            >
-                                Choose File
-                            </button>
+                            <Button
+                                text="Choose File"
+                                className="btn_1_2 px-3 py-1 text-sm"
+                            />
+
                             <p>Or Drag & Drop</p>
                         </div>
                     </>

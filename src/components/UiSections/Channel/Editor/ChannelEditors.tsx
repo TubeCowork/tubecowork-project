@@ -5,6 +5,8 @@ import PopUpModal from "@/components/Modal/PopUpModal"
 import { UserBasicDetailsType } from "@/utils/types/user"
 import React, { useState } from "react"
 import EditorCard from "./EditorCard"
+import { z } from "zod";
+
 
 type ChannelEditorsType = {
     addEditor: (email: string) => Promise<UserBasicDetailsType>
@@ -20,7 +22,14 @@ function ChannelEditors({ addEditor, allEditors }: ChannelEditorsType) {
         e.preventDefault()
         try {
             setFormMsg("")
-            const email = (e.target as HTMLFormElement)?.email?.value
+            const email = (e.target as HTMLFormElement)?.email?.value;
+
+            const emailSchema = z.string().email({ message: "Invalid email address" });
+            const parsedEmail = emailSchema.parse(emailSchema);
+
+            console.log("parsedEmail", parsedEmail);
+
+
             if (email) {
                 setAdding(true)
                 const addedEditor = await addEditor(email)

@@ -13,21 +13,29 @@ export interface IVideo extends Document {
     uploadedBy: mongoose.Types.ObjectId
 }
 
+export const maxVideoTitleCharacters = 100;
+export const maxVideoDescriptionCharacters = 5000;
+export const maxVideoTagsCharacters = 500;
+
+
 const videoSchema = new Schema<IVideo>({
     videoYoutubeId: {
         type: String,
         required: true,
+        maxlength: 20,
         trim: true,
     },
     title: {
         type: String,
         required: true,
         trim: true,
+        maxlength: maxVideoTitleCharacters,
     },
     description: {
         type: String,
         trim: true,
         default: "",
+        maxlength: maxVideoDescriptionCharacters,
     },
     isUploaded: {
         type: Boolean,
@@ -40,13 +48,16 @@ const videoSchema = new Schema<IVideo>({
     video: {
         type: String,
         required: true,
+        maxlength: 300,
     },
     thumbnail: {
         type: String,
+        maxlength: 300,
     },
     tags: {
         type: String,
         trim: true,
+        maxlength: maxVideoTagsCharacters,
     },
     uploadedBy: {
         type: Schema.Types.ObjectId,

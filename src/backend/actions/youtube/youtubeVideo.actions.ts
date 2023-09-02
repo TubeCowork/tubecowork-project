@@ -12,6 +12,7 @@ import { ObjectId } from "mongoose"
 import { makeVideoPublic, uploadVideoUnlisted } from "./youtubeHelper"
 import VideoModel from "@/backend/models/YoutubeVideo.model"
 import { getObjectId } from "../user.actions"
+import { connectToDB } from "@/backend/db"
 
 export const uploadVideoOnYoutube = async (
     videoDetails: FormData,
@@ -19,6 +20,7 @@ export const uploadVideoOnYoutube = async (
     userid: string
 ): Promise<string> => {
     try {
+        await connectToDB();
         const title = videoDetails.get("title") as string
         const description = videoDetails.get("description") as string
         const tags = videoDetails.get("tags") as string
@@ -88,6 +90,7 @@ export const approveUploadedVideo = async (
     videoId: string
 ): Promise<boolean> => {
     try {
+        await connectToDB();
         const _channelObjectId = await getObjectId(channelId)
         const channel = await YoutubeChannelModel.findById(_channelObjectId)
 

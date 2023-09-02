@@ -12,3 +12,8 @@ export function getFileExtension(fullFileName: string): string {
 
     return fullFileName.substring(lastIndex + 1)
 }
+
+
+export const getYoutubeUrlFromId = (id: string) => {
+    return `https://www.youtube.com/watch?v=${id}`
+}

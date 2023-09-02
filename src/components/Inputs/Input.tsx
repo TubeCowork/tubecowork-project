@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, useRef } from "react"
 
 import css from "styled-jsx/css"
 
@@ -27,8 +27,8 @@ function Input({
     label,
     value,
     onChange,
-    minlength = 0,
-    maxlength = 100,
+    minlength,
+    maxlength,
     required = false,
     instructions,
     disabled = false,
@@ -42,7 +42,6 @@ function Input({
                 </label>
             )}
             {instructions && <p>{instructions}</p>}
-
             <input
                 type={type ? type : "text"}
                 placeholder={placeholder ? placeholder : ""}
@@ -59,6 +58,11 @@ function Input({
                 disabled={disabled}
                 step="any"
             />
+            {maxlength &&
+                <div className="flex justify-end">
+                    <p><span>{value ? String(value).length : 0}/{maxlength}</span></p>
+                </div>
+            }
         </div>
     )
 }

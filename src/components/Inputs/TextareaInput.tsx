@@ -7,6 +7,7 @@ type InputProps = {
     className?: number
     rows?: number
     cols?: number
+    maxlength?: number,
     placeholder?: string
     label?: string
     value?: string | number
@@ -18,6 +19,7 @@ function TextareaInput({
     id,
     className,
     placeholder,
+    maxlength,
     label,
     value,
     onChange,
@@ -45,7 +47,13 @@ function TextareaInput({
                 rows={rows}
                 cols={cols}
                 required={required}
+                maxLength={maxlength}
             ></textarea>
+            {maxlength &&
+                <div className="flex justify-end">
+                    <p><span>{value ? String(value).length : 0}/{maxlength}</span></p>
+                </div>
+            }
             <style jsx>{style}</style>
         </div>
     )
