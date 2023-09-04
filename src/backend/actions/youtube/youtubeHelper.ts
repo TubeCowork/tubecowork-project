@@ -1,9 +1,15 @@
 import { google, youtube_v3 } from "googleapis"
 import { ObjectId } from "mongoose"
+// import axios from 'axios';
+
 import YoutubeChannelModel, {
     IYoutubeChannel,
 } from "../../models/YoutubeChannel.model"
-import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
+import {
+    YoutubeVideoUpdateDetailsType,
+    YoutubeVideoUploadDataType,
+    YoutubeVideoUploadFormPartial,
+} from "@/utils/types/youtube/video"
 import {
     YoutubeChannelBasicType,
     YoutubeChannelType,
@@ -45,9 +51,13 @@ const authticateYoutubeWithChannel = async (
         })
 
         if (isTokenExpired(channel.expiry)) {
-            const { credentials } = await auth.refreshAccessToken()
+            const { credentials } = await auth.refreshAccessToken();
             if (!credentials) throw Error("Not able to get new access token")
-            auth.credentials.access_token = credentials.access_token
+            auth.setCredentials({
+                access_token: credentials.access_token,
+                refresh_token: credentials.refresh_token,
+                expiry_date: credentials.expiry_date,
+            })
 
             await YoutubeChannelModel.findByIdAndUpdate(channel.id, {
                 access_token: credentials.access_token,
@@ -62,6 +72,8 @@ const authticateYoutubeWithChannel = async (
         })
         return youtube
     } catch (error) {
+        console.log("error auth rizing", error);
+
         throw error
     }
 }
@@ -136,7 +148,7 @@ export const uploadVideoUnlisted = async (
             status: {
                 privacyStatus: "unlisted",
                 selfDeclaredMadeForKids: false,
-                embeddable: true
+                embeddable: true,
             },
         }
 
@@ -185,14 +197,24 @@ export const uploadVideoUnlisted = async (
 
 export const makeVideoPublic = async (
     videoYoutubeId: string,
-    channel: IYoutubeChannel
+    channel: IYoutubeChannel,
+    updateData: YoutubeVideoUpdateDetailsType
 ): Promise<boolean> => {
     try {
+        const _dataToUpdate: youtube_v3.Schema$VideoSnippet = {
+            ...updateData,
+        } as youtube_v3.Schema$VideoSnippet
+        if (_dataToUpdate.tags) {
+            _dataToUpdate.tags = updateData.tags?.split(",")
+        }
         const youtube = await authticateYoutubeWithChannel(channel)
         await youtube.videos.update({
-            part: ["status"],
+            part: ["snippet", "status"],
             requestBody: {
                 id: videoYoutubeId,
+                // snippet: {
+                //     title: "new popupp",
+                // },
                 status: {
                     privacyStatus: "public",
                 },

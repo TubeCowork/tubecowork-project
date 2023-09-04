@@ -8,7 +8,11 @@ import {
 } from "@/backend/actions/youtube/youtubeVideo.actions"
 import { UserBasicDetailsType } from "@/utils/types/user"
 import { YoutubeChannelType } from "@/utils/types/youtube/channel"
-import { YoutubeVideoUploadDataType } from "@/utils/types/youtube/video"
+import {
+    YoutubeVideoUpdateDetailsType,
+    YoutubeVideoUploadDataType,
+    YoutubeVideoUploadFormPartial,
+} from "@/utils/types/youtube/video"
 import React, { useEffect, useState } from "react"
 
 type useChannelReturnType = {
@@ -16,7 +20,10 @@ type useChannelReturnType = {
     channelDetails: YoutubeChannelType | null
     uploadVideo: (videoData: YoutubeVideoUploadDataType) => Promise<string>
     addEditor: (email: string) => Promise<UserBasicDetailsType>
-    approveVideo: (videoId: string) => Promise<boolean>
+    approveVideo: (
+        videoId: string,
+        videoData: YoutubeVideoUpdateDetailsType
+    ) => Promise<boolean>
 }
 type useChannelType = {
     (id: string, userid?: string): useChannelReturnType
@@ -26,16 +33,6 @@ const useChannel: useChannelType = (id, userid) => {
     const [loading, setLoading] = useState(true)
     const [channelDetails, setChannelDetails] =
         useState<YoutubeChannelType | null>(null)
-
-    // if (!id) {
-    //     return {
-    //         loading: false,
-    //         channelDetails: null,
-    //         uploadVideo: async (videoData: YoutubeVideoUploadDataType) => {}
-
-    //     }
-    // }
-
     const loadDetails = async () => {
         try {
             const _channel = await fetchChannelDetails(id)
@@ -95,9 +92,16 @@ const useChannel: useChannelType = (id, userid) => {
         }
     }
 
-    const approveVideo = async (videoId: string): Promise<boolean> => {
+    const approveVideo = async (
+        videoId: string,
+        videoData: YoutubeVideoUpdateDetailsType
+    ): Promise<boolean> => {
         try {
-            const isApproved = await approveUploadedVideo(id, videoId)
+            const isApproved = await approveUploadedVideo(
+                id,
+                videoId,
+                videoData
+            )
             loadDetails()
             return isApproved
         } catch (error) {

@@ -7,7 +7,7 @@ type InputProps = {
     className?: number
     rows?: number
     cols?: number
-    maxlength?: number,
+    maxlength?: number
     placeholder?: string
     label?: string
     value?: string | number
@@ -31,7 +31,8 @@ function TextareaInput({
         <div className="textarea_div w-full flex flex-col text-start">
             {label && (
                 <label htmlFor={id}>
-                    {label} {required && <span>*</span>}
+                    {label}{" "}
+                    {required && <span className="text-primary">*</span>}
                 </label>
             )}
 
@@ -49,11 +50,15 @@ function TextareaInput({
                 required={required}
                 maxLength={maxlength}
             ></textarea>
-            {maxlength &&
+            {maxlength && (
                 <div className="flex justify-end">
-                    <p><span>{value ? String(value).length : 0}/{maxlength}</span></p>
+                    <p>
+                        <span>
+                            {value ? String(value).length : 0}/{maxlength}
+                        </span>
+                    </p>
                 </div>
-            }
+            )}
             <style jsx>{style}</style>
         </div>
     )

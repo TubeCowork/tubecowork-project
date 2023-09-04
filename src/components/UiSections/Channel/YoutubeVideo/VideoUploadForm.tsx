@@ -1,4 +1,8 @@
-import { maxVideoDescriptionCharacters, maxVideoTagsCharacters, maxVideoTitleCharacters } from "@/backend/models/YoutubeVideo.model"
+import {
+    maxVideoDescriptionCharacters,
+    maxVideoTagsCharacters,
+    maxVideoTitleCharacters,
+} from "@/backend/models/YoutubeVideo.model"
 import Image from "@/components/Image/Image"
 import FileInput from "@/components/Inputs/FileInput"
 import Input from "@/components/Inputs/Input"
@@ -11,18 +15,17 @@ import React from "react"
 
 // import YouTube, { YouTubeProps } from 'react-youtube';
 
-
 type VideoUploadFormType = {
-    handleOnChange: (id: string, data: File | string | number | null) => void;
-    type: "upload" | "update";
-    formValues: YoutubeVideoUploadFormPartial;
-
+    handleOnChange: (id: string, data: File | string | number | null) => void
+    type: "upload" | "update"
+    formValues: YoutubeVideoUploadFormPartial
 }
 
-
-
-function VideoUploadForm({ handleOnChange, type, formValues }: VideoUploadFormType) {
-
+function VideoUploadForm({
+    handleOnChange,
+    type,
+    formValues,
+}: VideoUploadFormType) {
     // const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     // access to player in all event handlers via event.target
     // event.target.pauseVideo();
@@ -37,45 +40,58 @@ function VideoUploadForm({ handleOnChange, type, formValues }: VideoUploadFormTy
     //     },
     // };
 
-
     return (
         <div className="flex flex-col w-full gap-6">
+            {type === "upload" ? (
+                <>
+                    <FileInput
+                        label="Upload Video File"
+                        required={true}
+                        instructions="File types supported: WEBM, MP4. Max size: 1024 MB = 1GB"
+                        onChange={handleOnChange}
+                        id="videoFile"
+                        accept=".webm, .mp4"
+                        isVideo={true}
+                        maxSize={1024}
+                    />
 
-            <div className="gap-4 items-center justify-center flex">
-                {type === "upload" ?
-                    <>
-                        <FileInput
-                            label="Upload Video File"
-                            required={true}
-                            instructions="File types supported: WEBM, MP4. Max size: 1024 MB = 1GB"
-                            onChange={handleOnChange}
-                            id="videoFile"
-                            accept=".webm, .mp4"
-                            isVideo={true}
-                            maxSize={1024}
+                    <FileInput
+                        label="Add Video Thumbnail"
+                        required={true}
+                        instructions="1920x1080 or 16:9 ratio. File types supported: JPG, PNG. Max size: 2 MB"
+                        onChange={handleOnChange}
+                        id="thumbnailFile"
+                        accept=".png, .jpg"
+                        isImage={true}
+                        maxSize={4}
+                    />
+                </>
+            ) : (
+                <div className="gap-4 items-center justify-center flex">
+                    <div className="">
+                        <label htmlFor="">Video</label>
+                        <YoutubeVideoPlayer
+                            height="250"
+                            width="360"
+                            src={formValues.videoURL || ""}
                         />
+                    </div>
+                    {/* <VideoPlayer src={getYoutubeUrlFromId(formValues.videoURL || "")} /> */}
 
-                        <FileInput
-                            label="Add Video Thumbnail"
-                            required={true}
-                            instructions="1920x1080 or 16:9 ratio. File types supported: JPG, PNG. Max size: 2 MB"
-                            onChange={handleOnChange}
-                            id="thumbnailFile"
-                            accept=".png, .jpg"
-                            isImage={true}
-                            maxSize={2}
+                    <div className="">
+                        <label htmlFor="">Thumbnail</label>
+                        <Image
+                            src={formValues.thumbnailURL || ""}
+                            alt=""
+                            className=" w-[360px] h-[250px]"
                         />
-                    </>
-                    :
-                    <>
+                    </div>
+                </div>
+            )}
 
-                        <YoutubeVideoPlayer height="250" width="360" src={formValues.videoURL || ""} />
-                        {/* <VideoPlayer src={getYoutubeUrlFromId(formValues.videoURL || "")} /> */}
-
-                        <Image src={formValues.thumbnailURL || ""} alt="" className=" w-[360px] h-[250px]" />
-                    </>
-                }
-            </div>
+            {type === "update" &&
+                <p>Currently you can't change details. Coming Soon....</p>
+            }
 
             <Input
                 label="Video Title"
@@ -106,8 +122,6 @@ function VideoUploadForm({ handleOnChange, type, formValues }: VideoUploadFormTy
                 value={formValues.tags || ""}
                 maxlength={maxVideoTagsCharacters}
             />
-
-
         </div>
     )
 }

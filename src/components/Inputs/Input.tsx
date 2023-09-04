@@ -58,11 +58,15 @@ function Input({
                 disabled={disabled}
                 step="any"
             />
-            {maxlength &&
+            {maxlength && (
                 <div className="flex justify-end">
-                    <p><span>{value ? String(value).length : 0}/{maxlength}</span></p>
+                    <p>
+                        <span>
+                            {value ? String(value).length : 0}/{maxlength}
+                        </span>
+                    </p>
                 </div>
-            }
+            )}
         </div>
     )
 }

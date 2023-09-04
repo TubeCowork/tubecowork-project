@@ -66,7 +66,9 @@ const FileInput: React.FC<FileInputProps> = ({
     }
 
     const handleSelectFile = (
-        e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement>
+        e: React.MouseEvent<
+            HTMLAnchorElement | HTMLButtonElement | HTMLDivElement
+        >
     ) => {
         setSelectedFileURL("")
         e.preventDefault()
@@ -93,8 +95,9 @@ const FileInput: React.FC<FileInputProps> = ({
             {instructions && <p>{instructions}</p>}
 
             <div
-                className={`select_area ${isDraggingOver && "select_area_hover"
-                    }`}
+                className={`select_area ${
+                    isDraggingOver && "select_area_hover"
+                }`}
                 onDrop={handleFileDrop}
                 onDragOver={(e) => {
                     e.preventDefault()
@@ -128,9 +131,7 @@ const FileInput: React.FC<FileInputProps> = ({
                                     />
                                 )
                             ))}
-                        <p className="cursor-pointer">
-                            Choose New File
-                        </p>
+                        <p className="cursor-pointer">Choose New File</p>
                     </>
                 ) : (
                     <>

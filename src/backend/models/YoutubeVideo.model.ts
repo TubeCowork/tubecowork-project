@@ -13,10 +13,9 @@ export interface IVideo extends Document {
     uploadedBy: mongoose.Types.ObjectId
 }
 
-export const maxVideoTitleCharacters = 100;
-export const maxVideoDescriptionCharacters = 5000;
-export const maxVideoTagsCharacters = 500;
-
+export const maxVideoTitleCharacters = 100
+export const maxVideoDescriptionCharacters = 5000
+export const maxVideoTagsCharacters = 500
 
 const videoSchema = new Schema<IVideo>({
     videoYoutubeId: {

@@ -2,16 +2,26 @@
 import { approveUploadedVideo } from "@/backend/actions/youtube/youtubeVideo.actions"
 import Button from "@/components/Buttons/Button"
 import PopUpModal from "@/components/Modal/PopUpModal"
-import { YoutubeVideoBasicType, YoutubeVideoUploadFormType } from "@/utils/types/youtube/video"
+import {
+    YoutubeVideoBasicType,
+    YoutubeVideoUpdateDetailsType,
+    YoutubeVideoUploadDataType,
+    YoutubeVideoUploadFormPartial,
+    YoutubeVideoUploadFormType,
+} from "@/utils/types/youtube/video"
 import Image from "next/image"
 import React, { useState } from "react"
 import { FaEdit, FaVideo } from "react-icons/fa"
 import VideoUploadForm from "./VideoUploadForm"
+import { getChangedValuesInOjects } from "@/utils/helper/generic"
 
 type VideoCardPropsType = {
     videoDetails: YoutubeVideoBasicType
     isOwner: boolean
-    approveVideoFn?: (videoId: string) => Promise<Boolean>
+    approveVideoFn?: (
+        videoId: string,
+        updateDetails: YoutubeVideoUpdateDetailsType
+    ) => Promise<Boolean>
 }
 
 function VideoCard({
@@ -19,14 +29,25 @@ function VideoCard({
     isOwner,
     approveVideoFn,
 }: VideoCardPropsType) {
-    const [isApprovePopup, setIsApprovePopup] = useState(false);
+    const [isApprovePopup, setIsApprovePopup] = useState(false)
 
     const [approving, setApproving] = useState(false)
     const approveVideo = async () => {
+        if (videoDetails.isApproved) return
         try {
             setApproving(true)
             if (!approveVideoFn) throw Error("no function for this")
-            const isApproved = await approveVideoFn(videoDetails.id)
+
+            const updateDetails: YoutubeVideoUpdateDetailsType = {
+                ...getChangedValuesInOjects(videoDetails, videoFormDetails),
+            } as YoutubeVideoUpdateDetailsType
+
+            console.log(updateDetails)
+
+            const isApproved = await approveVideoFn(
+                videoDetails.id,
+                updateDetails
+            )
         } catch (error) {
             console.log("approveVideo", error)
         }
@@ -38,10 +59,9 @@ function VideoCard({
         data: File | string | number | null
     ) => {
         if (id) {
-            setVideoFormDetails((prev) => ({ ...prev, [id]: data }))
+            // setVideoFormDetails((prev) => ({ ...prev, [id]: data }))
         }
     }
-
 
     const [videoFormDetails, setVideoFormDetails] =
         useState<YoutubeVideoUploadFormType>({
@@ -81,24 +101,13 @@ function VideoCard({
                         }}
                     />
                 )}
-                <Button
-                    icon={<FaEdit />}
-                    className="btn_1_2"
-                    onClick={() => { }}
-                />
-
-                <Button
-                    icon={<FaEdit />}
-                    text="Approve"
-                    onClick={() => setIsApprovePopup(true)}
-                    loading={approving}
-                />
 
                 {!videoDetails.isApproved &&
                     (isOwner ? (
                         <Button
+                            icon={<FaEdit />}
                             text="Approve"
-                            onClick={approveVideo}
+                            onClick={() => setIsApprovePopup(true)}
                             loading={approving}
                         />
                     ) : (
@@ -106,16 +115,36 @@ function VideoCard({
                     ))}
             </div>
 
-            <PopUpModal isOpen={isApprovePopup} closeModal={() => setIsApprovePopup(false)}>
-                <div className="">
-                    <div className="flex items-center justify-between px-4 py-4">
-                        <h2 className="text_sub_heading_size">Update & Approve</h2>
+            <PopUpModal
+                isOpen={isApprovePopup}
+                closeModal={() => setIsApprovePopup(false)}
+            >
+                <div className="px-4 py-4  w-[90vw] sm:w-[85vw] lg:w-[75vw] xl:w-[60vw] ">
+                    <p className="mt-2">
+                        <span className="text-primary">
+                            *
+                        </span> {" "}
+                        After approving, Video will be public on your channel.
+                    </p>
+                    <div className="flex items-center justify-between pb-4 border-b-2 border-secondary-hover">
+                        <h2 className="text_sub_heading_size">
+                            Update & Approve
+                        </h2>
                         <span className="flex gap-4">
-                            <Button text="Approve" className="btn_1_2" onClick={approveVideo} />
+                            <Button
+                                loading={approving}
+                                text={videoDetails.isApproved ? "Approved" : "Approve"}
+                                className={videoDetails.isApproved ? "" : "btn_1_2"}
+                                onClick={approveVideo}
+                            />
                         </span>
                     </div>
-                    <div className="px-24 w-[90vw] sm:w-[85vw] lg:w-[75vw] xl:w-[60vw] h-[86vh] overflow-y-auto py-4">
-                        <VideoUploadForm formValues={videoFormDetails} type="update" handleOnChange={handleOnChange} />
+                    <div className="px-24 py-4 h-[80vh] overflow-y-auto">
+                        <VideoUploadForm
+                            formValues={videoFormDetails}
+                            type="update"
+                            handleOnChange={handleOnChange}
+                        />
                     </div>
                 </div>
             </PopUpModal>

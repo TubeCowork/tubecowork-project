@@ -6,7 +6,9 @@ import YoutubeChannelModel, {
 } from "@/backend/models/YoutubeChannel.model"
 import {
     YoutubeVideoBasicType,
+    YoutubeVideoUpdateDetailsType,
     YoutubeVideoUploadDataType,
+    YoutubeVideoUploadFormPartial,
 } from "@/utils/types/youtube/video"
 import { ObjectId } from "mongoose"
 import { makeVideoPublic, uploadVideoUnlisted } from "./youtubeHelper"
@@ -20,7 +22,7 @@ export const uploadVideoOnYoutube = async (
     userid: string
 ): Promise<string> => {
     try {
-        await connectToDB();
+        await connectToDB()
         const title = videoDetails.get("title") as string
         const description = videoDetails.get("description") as string
         const tags = videoDetails.get("tags") as string
@@ -46,7 +48,7 @@ export const uploadVideoOnYoutube = async (
         }
         if (
             !channel.editors.includes(_userObjectId) &&
-            !(channel.owner === _userObjectId)
+            !(String(channel.owner) === String(_userObjectId))
         ) {
             throw Error(
                 "You dont have any access to upload in this youtube channel"
@@ -87,10 +89,13 @@ export const uploadVideoOnYoutube = async (
 
 export const approveUploadedVideo = async (
     channelId: string,
-    videoId: string
+    videoId: string,
+    updateData: YoutubeVideoUpdateDetailsType
 ): Promise<boolean> => {
     try {
-        await connectToDB();
+        console.log("updateData", updateData)
+
+        await connectToDB()
         const _channelObjectId = await getObjectId(channelId)
         const channel = await YoutubeChannelModel.findById(_channelObjectId)
 
@@ -101,11 +106,19 @@ export const approveUploadedVideo = async (
             throw Error("Channel or video not found")
         }
 
-        const isSuccess = await makeVideoPublic(video.videoYoutubeId, channel)
+        const isSuccess = await makeVideoPublic(
+            video.videoYoutubeId,
+            channel,
+            updateData
+        )
 
         if (isSuccess) {
-            video.isApproved = true
-            await video.save()
+            const updatedVideo = await VideoModel.findByIdAndUpdate(
+                _videoObjectId,
+                // { ...updateData, isApproved: true }
+                { isApproved: true }
+            )
+
             return true
         } else {
             throw Error("some error in approving video")
